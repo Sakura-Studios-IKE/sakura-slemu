@@ -1,0 +1,107 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        include:
+          - os: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install MSYS2 (Windows)
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-make
+
+      - name: Build sakura-lslc (sibling tool for e2e)
+        if: runner.os != 'Windows'
+        run: |
+          git clone --depth 1 https://github.com/Sakura-Studios-IKE/sakura-lslc.git ../sakura-lslc
+          make -C ../sakura-lslc CC=cc
+
+      - name: Build slemu (POSIX)
+        if: runner.os != 'Windows'
+        run: make CC=cc
+
+      - name: Build slemu (Windows MinGW)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: make CC=gcc
+
+      - name: End-to-end tests
+        if: runner.os != 'Windows'
+        run: make e2e
+
+      - name: Coverage scenarios
+        if: runner.os != 'Windows'
+        run: sh tests/coverage/run_coverage.sh
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: slemu-${{ matrix.os }}
+          path: |
+            slemu
+            slemu.exe
+          if-no-files-found: ignore
+
+  release:
+    name: Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+      - name: Extract changelog
+        id: changelog
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          awk -v v="$VERSION" '$0 ~ "^## \\[" v "\\]" {flag=1; next} flag && /^## \[/ {flag=0} flag' CHANGELOG.md > release-body.md
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: sakura-slemu ${{ steps.changelog.outputs.version }}
+          body_path: release-body.md
+          files: |
+            artifacts/slemu-ubuntu-latest/slemu
+            artifacts/slemu-macos-latest/slemu
+            artifacts/slemu-windows-latest/slemu.exe
+
+  publish-aur:
+    name: Push AUR PKGBUILD
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Push to AUR (sakura-slemu)
+        continue-on-error: true
+        uses: KSXGitHub/github-actions-deploy-aur@v2.7.2
+        with:
+          pkgname: sakura-slemu
+          pkgbuild: packaging/aur/sakura-slemu/PKGBUILD
+          commit_username: Shiho Sakura
+          commit_email: shiho@sakurastudios.eu
+          ssh_private_key: ${{ secrets.AUR_SSH_KEY }}
+          commit_message: "v${{ github.ref_name }}"

@@ -1,5 +1,9 @@
 # sakura-slemu
 
+[![CI](https://github.com/Sakura-Studios-IKE/sakura-slemu/actions/workflows/ci.yml/badge.svg)](https://github.com/Sakura-Studios-IKE/sakura-slemu/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![GitHub release](https://img.shields.io/github/v/release/Sakura-Studios-IKE/sakura-slemu)](https://github.com/Sakura-Studios-IKE/sakura-slemu/releases)
+
 **A headless Second Life region emulator for LSL, in pure C99 — by Sakura
 Studios, IKE.**
 
@@ -73,7 +77,26 @@ in `$PATH`. Builds with gcc / clang / tcc / MinGW / MSVC.
 ```sh
 make                          # Linux / macOS / *BSD
 cmake -B build && cmake --build build   # cross-platform
+sudo make install             # binary + man slemu(1)
 ```
+
+## Install
+
+### Arch Linux (AUR)
+
+```sh
+yay -S sakura-slemu            # latest tagged release
+yay -S sakura-slemu-git        # follow main
+```
+
+See [`packaging/aur/README.md`](./packaging/aur/README.md) for the
+PKGBUILDs.
+
+### Pre-built binaries
+
+Linux / macOS / Windows binaries are attached to each
+[GitHub Release](https://github.com/Sakura-Studios-IKE/sakura-slemu/releases).
+After installing, `man slemu` shows the full reference.
 
 ## Usage
 
