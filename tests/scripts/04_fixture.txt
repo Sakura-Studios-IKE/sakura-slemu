@@ -1,0 +1,7 @@
+URL_MATCH https://example.com/api/who
+STATUS 200
+BODY {"name":"Shiho","balance":42}
+
+URL_MATCH https://example.com/api/down
+STATUS 503
+BODY service unavailable

@@ -1,0 +1,3 @@
+starting balance: 100
+llGiveMoney returned 1
+ending balance: 95

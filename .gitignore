@@ -1,0 +1,34 @@
+# Build artefacts
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.exe
+/slemu
+/slemu.exe
+src/*.o
+
+# Test outputs
+tests/scripts/*.lslbc
+slemu_volume/
+/tmp/slemu_*
+
+# CMake
+/build/
+/build-*/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+
+# IDE / editor
+.idea/
+.vs/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
