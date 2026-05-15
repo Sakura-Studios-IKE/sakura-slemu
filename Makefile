@@ -4,7 +4,10 @@ BINDIR ?= $(PREFIX)/bin
 
 CC     ?= cc
 CFLAGS ?= -O2 -std=c99 -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-but-set-variable
-LDFLAGS ?= -lm
+
+# Keep -lm in LDLIBS (not LDFLAGS) so distributors who override LDFLAGS
+# with hardening flags (e.g. Arch's makepkg) still link libm.
+LDLIBS ?= -lm
 
 SRC := $(wildcard src/*.c)
 OBJ := $(SRC:.c=.o)
@@ -19,7 +22,7 @@ endif
 all: $(EXE)
 
 $(EXE): $(OBJ)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 
 src/%.o: src/%.c src/slemu.h
 	$(CC) $(CFLAGS) -c $< -o $@
