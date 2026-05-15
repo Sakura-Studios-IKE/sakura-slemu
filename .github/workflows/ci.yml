@@ -97,11 +97,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Push to AUR (sakura-slemu)
         continue-on-error: true
-        uses: KSXGitHub/github-actions-deploy-aur@v2.7.2
+        uses: KSXGitHub/github-actions-deploy-aur@v4.1.3
         with:
           pkgname: sakura-slemu
           pkgbuild: packaging/aur/sakura-slemu/PKGBUILD
           commit_username: Shiho Sakura
           commit_email: shiho@sakurastudios.eu
           ssh_private_key: ${{ secrets.AUR_SSH_KEY }}
-          commit_message: "v${{ github.ref_name }}"
+          commit_message: "Release ${{ github.ref_name }}"
