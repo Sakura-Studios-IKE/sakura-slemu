@@ -111,22 +111,21 @@ BODY service unavailable
 
 (Blank line between entries; URL match is substring.)
 
-## End-to-end test
+## Tests
 
-The repo ships a suite of LSL sources, expected-stdout fixtures, and a
-runner that drives `lslc -c` then `slemu`:
+The repo ships two test suites:
 
 ```sh
-make e2e
+make e2e            # 3 end-to-end pipeline tests (lslc -c → slemu run)
+make -C tests       # n/a — coverage runner lives at tests/coverage/
+
+sh tests/coverage/run_coverage.sh   # 41 scenarios exercising every
+                                    # supported builtin / event class
 ```
 
-```
-  PASS  01_hello
-  PASS  02_money
-  PASS  04_http_lsd
-
-Result: 3 passing / 3 e2e tests
-```
+Combined: **3 e2e + 41 coverage scenarios, all green.** Plus the
+debugger integration test in `../sakura-lsldb/` exercises the
+`--debug` protocol end-to-end.
 
 ## Project layout
 
@@ -158,10 +157,17 @@ sakura-slemu/
 
 ## Status
 
-`sakura-slemu` is the second half of Sakura Studios' open-source LSL
-toolchain. The first half — the compiler that produces the `.lslbc`
-this runtime consumes — lives at
-[`sakura-lslc`](https://github.com/ShihoSakura/sakura-lslc).
+`sakura-slemu` is the runtime in Sakura Studios' five-tool open-source
+LSL toolchain:
+
+* [`sakura-lslc`](https://github.com/ShihoSakura/sakura-lslc) — the
+  compiler that produces the `.lslbc` this runtime consumes.
+* [`sakura-lsldb`](https://github.com/ShihoSakura/sakura-lsldb) — gdb-style
+  CLI debugger that drives this runtime through its `--debug` protocol.
+* [`sakura-lsltest`](https://github.com/ShihoSakura/sakura-lsltest) —
+  pytest-style test framework that orchestrates this runtime.
+* [`sakura-intellij-lsl`](https://github.com/ShihoSakura/sakura-intellij-lsl)
+  — IntelliJ plugin that uses this runtime as its "run / debug" target.
 
 ## Author / Attribution
 
