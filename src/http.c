@@ -24,6 +24,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _WIN32
+#include <process.h>
+#define getpid _getpid
+#else
+#include <unistd.h>
+#endif
 
 HttpFixture *http_fixture_load(const char *path) {
     size_t len = 0;
@@ -84,16 +90,27 @@ static char *real_http_get(const char *url, int *status, const char *body, SValu
         if (key == 0) { strncpy(method, params[i+1].u.s ? params[i+1].u.s : "GET", sizeof method - 1); method[sizeof method-1] = '\0'; }
         else if (key == 1) { strncpy(mime, params[i+1].u.s ? params[i+1].u.s : "", sizeof mime - 1); mime[sizeof mime-1] = '\0'; }
     }
+
+    /* Per-invocation temp path. Earlier versions used "/tmp/slemu_resp.$$"
+     * which the *shell* expanded to its own (popen) PID; slemu then tried
+     * to read the literal "$$" filename and got nothing. Now we generate
+     * the path in C and pass it as a fully-resolved literal. */
+    static unsigned long counter = 0;
+    char respfile[128];
+    snprintf(respfile, sizeof respfile, "/tmp/slemu_resp.%ld.%lu",
+             (long)getpid(), ++counter);
+
     /* shell out */
-    char cmd[4096];
+    char cmd[8192];
     if (body && *body && (strcmp(method, "POST") == 0 || strcmp(method, "PUT") == 0)) {
         snprintf(cmd, sizeof cmd,
-            "curl -sS -o /tmp/slemu_resp.$$ -w '%%{http_code}' -X %s -H 'Content-Type: %s' --data-binary @- '%s' <<'__SLEMU_BODY__'\n%s\n__SLEMU_BODY__",
-            method, mime, url, body);
+            "curl -sS -o '%s' -w '%%{http_code}' -X %s -H 'Content-Type: %s' "
+            "--data-binary @- '%s' <<'__SLEMU_BODY__'\n%s\n__SLEMU_BODY__",
+            respfile, method, mime, url, body);
     } else {
         snprintf(cmd, sizeof cmd,
-            "curl -sS -o /tmp/slemu_resp.$$ -w '%%{http_code}' -X %s -H 'Accept: %s' '%s'",
-            method, mime, url);
+            "curl -sS -o '%s' -w '%%{http_code}' -X %s -H 'Accept: %s' '%s'",
+            respfile, method, mime, url);
     }
     FILE *p = popen(cmd, "r");
     if (!p) return xstrdup("");
@@ -102,8 +119,8 @@ static char *real_http_get(const char *url, int *status, const char *body, SValu
     *status = atoi(code);
     /* read body */
     size_t bl = 0;
-    char *resp = read_file("/tmp/slemu_resp.$$", &bl);
-    remove("/tmp/slemu_resp.$$");
+    char *resp = read_file(respfile, &bl);
+    remove(respfile);
     if (!resp) resp = xstrdup("");
     return resp;
 }
