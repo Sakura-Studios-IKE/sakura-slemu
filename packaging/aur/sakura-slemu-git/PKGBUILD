@@ -1,0 +1,34 @@
+# Maintainer: Shiho Sakura <shiho@sakurastudios.eu>
+
+pkgname=sakura-slemu-git
+_pkgname=sakura-slemu
+pkgver=1.0.0.r0.gHEAD
+pkgrel=1
+pkgdesc="LSL bytecode emulator / Second Life runtime simulator — part of the Sakura LSL toolchain (git)"
+arch=('x86_64' 'aarch64')
+url="https://github.com/Sakura-Studios-IKE/sakura-slemu"
+license=('MIT')
+depends=('glibc')
+optdepends=('curl: for --http-real mode')
+makedepends=('gcc' 'make' 'git')
+provides=('sakura-slemu')
+conflicts=('sakura-slemu')
+source=("$_pkgname::git+https://github.com/Sakura-Studios-IKE/sakura-slemu.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/$_pkgname"
+    git describe --long --tags 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' \
+        || printf "0.0.0.r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "$srcdir/$_pkgname"
+    make
+}
+
+package() {
+    cd "$srcdir/$_pkgname"
+    make PREFIX=/usr DESTDIR="$pkgdir" install
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
