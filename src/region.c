@@ -14,6 +14,35 @@ void region_init(Region *r) {
     r->wall_start = now_seconds();
     r->max_steps = 100000;
     r->wall_timeout = 60.0;
+    r->out = stdout;
+}
+
+Avatar *region_find_avatar(Region *r, const char *uuid) {
+    if (!uuid) return NULL;
+    for (int i = 0; i < r->n_avatars; i++)
+        if (strcmp(r->avatars[i].uuid, uuid) == 0) return &r->avatars[i];
+    return NULL;
+}
+
+int region_add_group(Region *r, const char *uuid, const char *name) {
+    for (int i = 0; i < r->n_groups; i++)
+        if (strcmp(r->groups[i].uuid, uuid) == 0) return i;
+    r->groups = xrealloc(r->groups, sizeof(Group) * (size_t)(r->n_groups + 1));
+    Group *g = &r->groups[r->n_groups++];
+    memset(g, 0, sizeof *g);
+    g->uuid = xstrdup(uuid);
+    g->name = xstrdup(name ? name : "");
+    return r->n_groups - 1;
+}
+
+int region_group_add_member(Region *r, const char *gu, const char *au) {
+    Group *g = NULL;
+    for (int i = 0; i < r->n_groups; i++)
+        if (strcmp(r->groups[i].uuid, gu) == 0) { g = &r->groups[i]; break; }
+    if (!g) return 0;
+    g->members = xrealloc(g->members, sizeof(char*) * (size_t)(g->n_members + 1));
+    g->members[g->n_members++] = xstrdup(au);
+    return 1;
 }
 
 static void script_free(Script *s) {
@@ -149,16 +178,7 @@ static void dispatch_event(Script *s, Event *ev) {
         }
     }
     if (!match) return;   /* state does not handle this event */
-    if (s->trace) {
-        fprintf(stderr, "[slemu] %s.%s.%s(",
-            s->name, prog_str(s->prog, st->name_idx), ev->name);
-        for (int i = 0; i < ev->n_args; i++) {
-            char *t = sv_to_string(&ev->args[i]);
-            fprintf(stderr, "%s%s", i ? ", " : "", t);
-            free(t);
-        }
-        fprintf(stderr, ")\n");
-    }
+    evt_event_dispatch(s->region, s, ev->name, ev->n_args);
     /* Bind params into a per-event scope: we allocate a parallel array
      * keyed by name_idx in the same way locals are. The VM walks
      * statements and resolves identifiers; param/local resolution lives
@@ -263,8 +283,10 @@ int region_run(Region *r) {
         }
 
         if (!any_progress) {
-            /* No events to run. Sleep a short interval — but stop if no
-             * script is waiting on a timer either. */
+            /* No script-level event to run. Try to consume the next CLI
+             * command (touch, dialog reply, etc.). If none, decide whether
+             * to wait for timers. */
+            if (commands_pump(r)) { r->n_steps++; continue; }
             int waiting = 0;
             for (int i = 0; i < r->n_scripts; i++)
                 if (r->scripts[i]->timer_interval > 0) { waiting = 1; break; }
@@ -272,6 +294,9 @@ int region_run(Region *r) {
             sleep_seconds(0.05);
         }
     }
+    /* Drain remaining commands after the script settles (lets a test
+     * file end with ASSERT_* / SNAPSHOT / EXIT). */
+    while (commands_pump(r)) { r->n_steps++; }
 
     if (r->volume) volume_save_economy(r->volume, r);
     return 0;

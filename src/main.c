@@ -38,6 +38,11 @@ static void help(const char *p) {
 "  --http-real               Send real HTTP via the system `curl` binary\n"
 "  --http-fixture FILE       Fixture file matched by URL substring\n"
 "\n"
+"World / player simulation:\n"
+"  --config FILE             Load world config (avatars, groups, fixtures)\n"
+"  --commands FILE           Load a command file (player actions)\n"
+"  --json-events             Emit events as one JSON object per line\n"
+"\n"
 "Other:\n"
 "  --version                 Print version and exit\n"
 "  -h, --help                Show this help message\n",
@@ -48,6 +53,8 @@ int main(int argc, char **argv) {
     Region r; region_init(&r);
     const char *volume_path = "./slemu_volume";
     const char *fixture = NULL;
+    const char *config_path = NULL;
+    const char *commands_path = NULL;
     const char *owner_uuid_arg = NULL;
     const char *owner_name = NULL;
     long owner_balance = 0;
@@ -106,6 +113,15 @@ int main(int argc, char **argv) {
             if (i + 1 >= argc) { fprintf(stderr, "slemu: --name needs a string\n"); return 2; }
             object_name = argv[++i]; i++; continue;
         }
+        if (!strcmp(a, "--config")) {
+            if (i + 1 >= argc) { fprintf(stderr, "slemu: --config needs a path\n"); return 2; }
+            config_path = argv[++i]; i++; continue;
+        }
+        if (!strcmp(a, "--commands")) {
+            if (i + 1 >= argc) { fprintf(stderr, "slemu: --commands needs a path\n"); return 2; }
+            commands_path = argv[++i]; i++; continue;
+        }
+        if (!strcmp(a, "--json-events")) { r.json_events = 1; i++; continue; }
         if (!strcmp(a, "--")) { i++; break; }
         fprintf(stderr, "slemu: unrecognised option '%s' (try --help)\n", a);
         return 2;
@@ -126,10 +142,23 @@ int main(int argc, char **argv) {
         owner_uuid_arg ? owner_uuid_arg : "11111111-1111-1111-1111-111111111111",
         owner_name ? owner_name : "Test Owner");
 
-    /* HTTP */
+    /* HTTP fixtures */
     if (fixture) {
         r.http_fix = http_fixture_load(fixture);
         if (!r.http_fix) return 2;
+    }
+
+    /* Config file (may add more fixtures / avatars / groups) */
+    if (config_path) {
+        if (!config_load(&r, config_path)) return 2;
+    }
+
+    /* Commands file (player actions) */
+    if (commands_path) {
+        if (commands_load(&r, commands_path) < 0) {
+            fprintf(stderr, "slemu: cannot read commands '%s'\n", commands_path);
+            return 2;
+        }
     }
 
     /* Load each script. */

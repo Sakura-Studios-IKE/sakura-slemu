@@ -128,7 +128,6 @@ char *http_request(Script *s, const char *url, SValue *params, int n_params, con
     args[3].type = SV_STRING; args[3].u.s = resp_body;
     script_push_event(s, "http_response", args, 4);
 
-    if (s->trace) fprintf(stderr, "[slemu] HTTP %s -> %d (%zu bytes)\n",
-        url, status, args[3].u.s ? strlen(args[3].u.s) : 0);
+    evt_http_out(s->region, s, url, "GET", status, args[3].u.s ? strlen(args[3].u.s) : 0);
     return id;
 }

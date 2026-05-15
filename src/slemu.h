@@ -169,6 +169,40 @@ void program_free(Program *p);
 typedef struct Script Script;
 typedef struct Region Region;
 
+/* Forward type definitions used by Script. */
+typedef struct PrimFace {
+    double color_r, color_g, color_b;
+    double alpha;
+    char *texture;
+    int glow;
+} PrimFace;
+
+typedef struct HudState {
+    char *text;
+    double text_r, text_g, text_b, text_alpha;
+    char *attached_to;        /* avatar UUID or NULL */
+    int attach_point;
+    PrimFace faces[8];
+} HudState;
+
+typedef struct OpenDialog {
+    char *script_uuid;
+    char *to_avatar;
+    char *message;
+    char **buttons;
+    int n_buttons;
+    int channel;
+    int is_textbox;
+    struct OpenDialog *next;
+} OpenDialog;
+
+typedef struct Group {
+    char *uuid;
+    char *name;
+    char **members;
+    int n_members;
+} Group;
+
 /* A single event waiting to be dispatched. */
 typedef struct Event {
     char *name;             /* event handler name */
@@ -224,8 +258,15 @@ struct Script {
         SValue pos;
         int link_number;
         int type;
+        /* touch UV / face */
+        int touch_face;
+        double touch_uv_x, touch_uv_y;
+        double touch_st_x, touch_st_y;
     } detected[16];
     int n_detected;
+
+    /* HUD / visual state */
+    HudState hud;
 };
 
 /* Listen filter chain entry. */
@@ -251,6 +292,7 @@ struct Region {
 
     double virtual_now;       /* seconds since region "rezzed" */
     double wall_start;        /* unix time at start */
+    double virtual_offset;    /* added to wall delta to fast-forward time */
 
     int trace;
 
@@ -260,24 +302,53 @@ struct Region {
     struct Avatar *avatars;
     int n_avatars;
 
+    /* Groups */
+    Group *groups;
+    int n_groups;
+
     /* HTTP backend */
     int http_real;            /* 1 = libcurl, 0 = fixture */
     HttpFixture *http_fix;
 
-    /* Pending HTTP requests when real backend used. */
-    struct PendingHttp *pending_http;
+    /* Inbound HTTP URLs registered via llRequestURL — UUID -> script. */
+    struct InboundUrl *inbound;
+
+    /* Open menus / textboxes from this region — one list across scripts. */
+    OpenDialog *dialogs;
+
+    /* Output mode */
+    int json_events;          /* if 1, emit JSON lines instead of human text */
+    FILE *out;                /* event output stream */
 
     /* Step limit & wall timeout. */
     long max_steps;
     long n_steps;
     double wall_timeout;
+
+    /* Commands file (consumed sequentially between region cycles). */
+    char **command_lines;
+    int n_command_lines;
+    int next_command;
 };
+
+typedef struct InboundUrl {
+    char *url;                /* fake URL we hand back */
+    Script *target;
+    char *req_key;            /* most recent llRequestURL key from this script */
+    struct InboundUrl *next;
+} InboundUrl;
 
 typedef struct Avatar {
     char *uuid;
     char *name;
     long long balance;
+    char **groups;            /* heap, NULL-terminated UUID list */
+    int n_groups;
+    /* current attachment, if any */
+    char *attached_object;    /* object UUID this avatar wears, or NULL */
 } Avatar;
+
+/* (Group, HudState, PrimFace, OpenDialog defined earlier — before Script.) */
 
 /* Region lifecycle. */
 void region_init(Region *r);
@@ -286,6 +357,57 @@ int  region_load_script(Region *r, const char *lslbc_path);
 void region_set_volume(Region *r, Volume *v);
 void region_set_owner(Region *r, const char *uuid, const char *name);
 int  region_add_avatar(Region *r, const char *uuid, long long balance, const char *name);
+int  region_add_group(Region *r, const char *uuid, const char *name);
+int  region_group_add_member(Region *r, const char *group_uuid, const char *avatar_uuid);
+Avatar *region_find_avatar(Region *r, const char *uuid);
+
+/* ------------------ Unified event emitter ------------------ */
+/*
+ * Every script-observable side effect goes through one of these. In
+ * default mode they print human-readable lines prefixed with the event
+ * kind; under --json-events they emit one JSON object per line on
+ * region->out. The user (or a test harness) can grep / jq / pipe them.
+ */
+void evt_chat(Region *r, Script *s, const char *kind, int ch, const char *msg);   /* say|whisper|shout|region|owner|im */
+void evt_chat_to(Region *r, Script *s, const char *to, int ch, const char *msg);
+void evt_dialog(Region *r, Script *s, const char *to, const char *msg,
+                char **buttons, int n_buttons, int channel, int is_textbox);
+void evt_loadurl(Region *r, Script *s, const char *to, const char *label, const char *url);
+void evt_hud_text(Region *r, Script *s, const char *text, double rr, double gg, double bb, double alpha);
+void evt_money(Region *r, const char *from, const char *to, long long amt, int ok);
+void evt_link_msg(Region *r, Script *from, int target_link, long long num, const char *str, const char *id);
+void evt_http_out(Region *r, Script *s, const char *url, const char *method, int status, size_t body_len);
+void evt_state_change(Region *r, Script *s, const char *from, const char *to);
+void evt_event_dispatch(Region *r, Script *s, const char *event_name, int n_args);
+void evt_die(Region *r, Script *s);
+void evt_reset(Region *r, Script *s);
+void evt_info(Region *r, const char *fmt, ...);    /* generic info line */
+void evt_assertion(Region *r, const char *what, int passed, const char *detail);
+
+/* ------------------ Open dialogs ------------------ */
+void dialog_open(Region *r, Script *s, const char *to, const char *msg,
+                 char **buttons, int n_buttons, int channel, int is_textbox);
+OpenDialog *dialog_find(Region *r, const char *avatar_uuid);
+void dialog_close(Region *r, const char *avatar_uuid);   /* removes all open dialogs for this avatar */
+
+/* ------------------ Inbound URLs ------------------ */
+const char *inbound_register(Region *r, Script *s, const char *req_key);  /* returns owned URL */
+Script *inbound_resolve(Region *r, const char *url);
+
+/* ------------------ Commands (player actions) ------------------ */
+/*
+ * commands.c parses a line-oriented file. Each command is processed
+ * between event-loop ticks. See doc for syntax. Returns the number of
+ * loaded commands.
+ */
+int  commands_load(Region *r, const char *path);
+int  commands_pump(Region *r);   /* process next command, return 1 if processed, 0 if exhausted */
+
+/* ------------------ Config ------------------ */
+int  config_load(Region *r, const char *path);
+
+/* ------------------ Snapshots ------------------ */
+void snapshot_dump(Region *r, FILE *out);
 
 /* Send an event to ONE script. Takes ownership of args. */
 void script_push_event(Script *s, const char *name, SValue *args, int n_args);

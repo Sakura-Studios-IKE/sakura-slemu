@@ -152,41 +152,46 @@ static void route_listen(Script *s, int channel, const char *name, const char *i
     }
 }
 
+extern void chatlog_record(const char *kind, int ch, const char *msg);
+
 static SValue bi_llSay(Script *s, SValue *a, int n) {
-    int ch = (int)ai(a, n, 0);
-    const char *msg = as(a, n, 1);
-    printf("[say  ch=%d %s] %s\n", ch, s->name ? s->name : "Object", msg);
-    fflush(stdout);
+    int ch = (int)ai(a, n, 0); const char *msg = as(a, n, 1);
+    evt_chat(s->region, s, "say", ch, msg);
+    chatlog_record("say", ch, msg);
     route_listen(s, ch, s->name ? s->name : "Object", s->uuid, msg);
     return sv_void();
 }
 static SValue bi_llWhisper(Script *s, SValue *a, int n) {
     int ch = (int)ai(a, n, 0); const char *msg = as(a, n, 1);
-    printf("[whisper ch=%d %s] %s\n", ch, s->name ? s->name : "Object", msg); fflush(stdout);
+    evt_chat(s->region, s, "whisper", ch, msg);
+    chatlog_record("whisper", ch, msg);
     route_listen(s, ch, s->name ? s->name : "Object", s->uuid, msg);
     return sv_void();
 }
 static SValue bi_llShout(Script *s, SValue *a, int n) {
     int ch = (int)ai(a, n, 0); const char *msg = as(a, n, 1);
-    printf("[shout ch=%d %s] %s\n", ch, s->name ? s->name : "Object", msg); fflush(stdout);
+    evt_chat(s->region, s, "shout", ch, msg);
+    chatlog_record("shout", ch, msg);
     route_listen(s, ch, s->name ? s->name : "Object", s->uuid, msg);
     return sv_void();
 }
 static SValue bi_llOwnerSay(Script *s, SValue *a, int n) {
     const char *msg = as(a, n, 0);
-    printf("[owner %s] %s\n", s->name ? s->name : "Object", msg); fflush(stdout);
+    evt_chat(s->region, s, "owner", 0, msg);
+    chatlog_record("owner", 0, msg);
     return sv_void();
 }
 static SValue bi_llRegionSay(Script *s, SValue *a, int n) {
     int ch = (int)ai(a, n, 0); const char *msg = as(a, n, 1);
-    printf("[region ch=%d %s] %s\n", ch, s->name ? s->name : "Object", msg); fflush(stdout);
+    evt_chat(s->region, s, "region", ch, msg);
+    chatlog_record("region", ch, msg);
     route_listen(s, ch, s->name ? s->name : "Object", s->uuid, msg);
     return sv_void();
 }
 static SValue bi_llRegionSayTo(Script *s, SValue *a, int n) {
     const char *id = as(a, n, 0); int ch = (int)ai(a, n, 1); const char *msg = as(a, n, 2);
-    printf("[regionto ch=%d to=%s %s] %s\n", ch, id, s->name ? s->name : "Object", msg); fflush(stdout);
-    /* Deliver only to the matching prim. */
+    evt_chat_to(s->region, s, id, ch, msg);
+    chatlog_record("region-to", ch, msg);
     for (int i = 0; i < s->region->n_scripts; i++) {
         Script *t = s->region->scripts[i];
         if (strcmp(t->uuid, id) != 0) continue;
@@ -205,29 +210,50 @@ static SValue bi_llRegionSayTo(Script *s, SValue *a, int n) {
 }
 static SValue bi_llInstantMessage(Script *s, SValue *a, int n) {
     const char *id = as(a, n, 0); const char *msg = as(a, n, 1);
-    printf("[im to=%s] %s\n", id, msg); fflush(stdout);
+    evt_chat_to(s->region, s, id, -1, msg);
+    chatlog_record("im", -1, msg);
     return sv_void();
 }
 static SValue bi_llSetText(Script *s, SValue *a, int n) {
     const char *txt = as(a, n, 0);
-    printf("[text %s] %s\n", s->name ? s->name : "Object", txt); fflush(stdout);
+    /* extract colour vector if given */
+    double rr = 1, gg = 1, bb = 1, alpha = 1;
+    if (n > 1 && a[1].type == SV_VECTOR) { rr = a[1].u.v.x; gg = a[1].u.v.y; bb = a[1].u.v.z; }
+    if (n > 2) {
+        if (a[2].type == SV_FLOAT) alpha = a[2].u.f;
+        else if (a[2].type == SV_INTEGER) alpha = (double)a[2].u.i;
+    }
+    free(s->hud.text); s->hud.text = xstrdup(txt);
+    s->hud.text_r = rr; s->hud.text_g = gg; s->hud.text_b = bb;
+    s->hud.text_alpha = alpha;
+    evt_hud_text(s->region, s, txt, rr, gg, bb, alpha);
     return sv_void();
 }
 static SValue bi_llDialog(Script *s, SValue *a, int n) {
     const char *id = as(a, n, 0); const char *msg = as(a, n, 1);
     int ch = (int)ai(a, n, 3);
-    printf("[dialog to=%s ch=%d] %s\n", id, ch, msg); fflush(stdout);
+    int nb = (n > 2 && a[2].type == SV_LIST) ? a[2].u.l.n : 0;
+    char **buttons = NULL;
+    if (nb > 0) {
+        buttons = xcalloc((size_t)nb, sizeof(char*));
+        for (int i = 0; i < nb; i++) buttons[i] = sv_to_string(&a[2].u.l.items[i]);
+    }
+    evt_dialog(s->region, s, id, msg, buttons, nb, ch, 0);
+    dialog_open(s->region, s, id, msg, buttons, nb, ch, 0);
+    for (int i = 0; i < nb; i++) free(buttons[i]);
+    free(buttons);
     return sv_void();
 }
 static SValue bi_llTextBox(Script *s, SValue *a, int n) {
     const char *id = as(a, n, 0); const char *msg = as(a, n, 1);
     int ch = (int)ai(a, n, 2);
-    printf("[textbox to=%s ch=%d] %s\n", id, ch, msg); fflush(stdout);
+    evt_dialog(s->region, s, id, msg, NULL, 0, ch, 1);
+    dialog_open(s->region, s, id, msg, NULL, 0, ch, 1);
     return sv_void();
 }
 static SValue bi_llLoadURL(Script *s, SValue *a, int n) {
     const char *id = as(a, n, 0); const char *msg = as(a, n, 1); const char *url = as(a, n, 2);
-    printf("[loadurl to=%s] %s -> %s\n", id, msg, url); fflush(stdout);
+    evt_loadurl(s->region, s, id, msg, url);
     return sv_void();
 }
 
@@ -851,8 +877,7 @@ static SValue bi_llGiveMoney(Script *s, SValue *a, int n) {
     }
     s->region->avatars[oi].balance -= amt;
     s->region->avatars[di].balance += amt;
-    fprintf(stderr, "[slemu] L$%lld: %s -> %s (balances now %lld / %lld)\n",
-        amt, o, dest, s->region->avatars[oi].balance, s->region->avatars[di].balance);
+    evt_money(s->region, o, dest, amt, 1);
     return sv_int(1);
 }
 static SValue bi_llTransferLindenDollars(Script *s, SValue *a, int n) {
@@ -1395,6 +1420,21 @@ static SValue bi_llHTTPResponse(Script *s, SValue *a, int n) {
     (void)s; (void)a; (void)n;
     return sv_void();
 }
+static SValue bi_llRequestURL(Script *s, SValue *a, int n) {
+    (void)a; (void)n;
+    char *id = gen_uuid();
+    const char *url = inbound_register(s->region, s, id);
+    /* fire http_request immediately with method "URL_REQUEST_GRANTED" */
+    SValue *args = xmalloc(sizeof(SValue) * 3);
+    args[0] = sv_key(id);
+    args[1] = sv_string("URL_REQUEST_GRANTED");
+    args[2] = sv_string(url);
+    script_push_event(s, "http_request", args, 3);
+    SValue r = sv_key(id);
+    free(id);
+    return r;
+}
+static SValue bi_llReleaseURL(Script *s, SValue *a, int n) { (void)s; (void)a; (void)n; return sv_void(); }
 static SValue bi_llSetContentType(Script *s, SValue *a, int n) { (void)s; (void)a; (void)n; return sv_void(); }
 
 /* ============================================================== */
@@ -1593,6 +1633,8 @@ static const BuiltinEntry TABLE[] = {
     /* HTTP */
     {"llHTTPRequest", bi_llHTTPRequest}, {"llHTTPResponse", bi_llHTTPResponse},
     {"llSetContentType", bi_llSetContentType},
+    {"llRequestURL", bi_llRequestURL}, {"llRequestSecureURL", bi_llRequestURL},
+    {"llReleaseURL", bi_llReleaseURL},
     /* Region misc */
     {"llGetRegionName", bi_llGetRegionName},
     {"llKey2Name", bi_llKey2Name}, {"llGetUsername", bi_llGetUsername},
