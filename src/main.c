@@ -49,7 +49,17 @@ static void help(const char *p) {
 "\n"
 "Other:\n"
 "  --version                 Print version and exit\n"
-"  -h, --help                Show this help message\n",
+"  -h, --help                Show this help message\n"
+"\n"
+"Examples:\n"
+"  slemu greeter.lslbc                          # run a single script\n"
+"  slemu --http-real vendor.lslbc               # real HTTP via curl\n"
+"  slemu --http-fixture fx.txt vendor.lslbc     # deterministic HTTP\n"
+"  slemu --config club.cfg --commands buy.cmd \\\n"
+"        club_vendor.lslbc                      # scripted multi-avatar world\n"
+"  slemu --debug greeter.lslbc                  # debug protocol (use lsldb)\n"
+"\n"
+"See slemu(1) for the complete manual.\n",
     p);
 }
 

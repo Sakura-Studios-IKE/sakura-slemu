@@ -1,0 +1,272 @@
+.TH SLEMU 1 "2026-05-15" "Sakura LSL Toolchain 1.0.0" "Sakura LSL Toolchain"
+.\" Manual page for slemu(1) — the Sakura Studios LSL region emulator.
+.\" Copyright (c) 2026 Sakura Studios, IKE. Licensed under the MIT License.
+.SH NAME
+slemu \- headless Second Life / OpenSim region emulator for LSL bytecode
+.SH SYNOPSIS
+.B slemu
+.RI [ options ]
+.IR script.lslbc " [" more.lslbc " ...]"
+.SH DESCRIPTION
+.B slemu
+is the Sakura Studios region emulator. It loads one or more SLBC
+bytecode files produced by
+.BR lslc (1)
+and executes them in a self-contained, headless region with realistic
+side-effect mocking: chat is routed between linked scripts, money
+transfers debit and credit avatar balances, listens are dispatched by
+channel, HTTP can be either stubbed from a fixture file or sent for
+real, and persistent state (KVP, linkset data, notecards, inventory)
+is held in a directory-shaped
+.I volume
+that survives across runs.
+.PP
+Each positional argument is a separate script and becomes a linked
+prim in the same simulated object \(em the first script is link 1
+(the root prim), subsequent scripts are link 2, 3, ... and may
+exchange
+.BR llMessageLinked ()
+traffic.
+.PP
+.B slemu
+is the engine that powers
+.BR lsltest (1)
+(scripted property tests) and
+.BR lsldb (1)
+(interactive line-level debugger; see the
+.B \-\-debug
+flag below). Used on its own it is also a convenient one-shot
+checker: write a script,
+.B lslc \-c
+it, and run it under
+.B slemu
+to confirm it boots, enters
+.BR default ,
+handles a synthetic touch, and exits cleanly.
+.SH OPTIONS
+.SS Region and avatars
+.TP
+.BI \-\-volume " DIR"
+Use
+.I DIR
+as the persistence root for KVP, linkset data, notecards and HTTP
+caches. The directory is created if it does not exist. Defaults to
+.IR ./slemu_volume .
+.TP
+.BI \-\-owner " UUID" [: Name ]
+Set the owner avatar's UUID (and optionally display name). This is the
+value returned by
+.BR llGetOwner ()
+and influences ownership-gated built-ins.
+.TP
+.BI \-\-owner\-balance " N"
+Starting L$ balance for the owner avatar. Defaults to
+.BR 0 .
+.TP
+.BI \-\-avatar " UUID" : BAL [: Name ]
+Pre-register an additional avatar in the region with a starting L$
+balance. May be repeated.
+.TP
+.BI \-\-name " NAME"
+Object name returned by
+.BR llGetObjectName ().
+Defaults to
+.BR Object .
+.SS Execution limits
+.TP
+.BI \-\-steps " N"
+Stop after dispatching
+.I N
+events. The default is
+.BR 100000 .
+.TP
+.BI \-\-timeout " SECS"
+Wall-clock limit in seconds (floating point). The default is
+.BR 60 .
+.TP
+.B \-\-trace
+Log every event dispatched to a script's event queue.
+.SS HTTP
+.TP
+.B \-\-no\-http
+(Default.) HTTP requests are answered from the in-region fixture
+table or, if none matches, with an empty 200 response.
+.TP
+.B \-\-http\-real
+Make real HTTP requests via the system
+.BR curl (1)
+binary. Use with care: this lets sandboxed bytecode talk to the
+network.
+.TP
+.BI \-\-http\-fixture " FILE"
+Load an HTTP fixture file. Each fixture entry is matched against an
+outgoing request URL by substring; the first match wins.
+.SS World / player simulation
+.TP
+.BI \-\-config " FILE"
+Load a world-config file. Config files may declare additional
+avatars, groups, owner attributes and HTTP fixtures; they are the
+right place to describe a multi-avatar scenario.
+.TP
+.BI \-\-commands " FILE"
+Load a command file describing scripted player actions (touch, chat,
+pay, give-inventory, sit, ...). Combined with
+.B \-\-config
+this turns
+.B slemu
+into a deterministic, repeatable player.
+.TP
+.B \-\-json\-events
+Emit world events on standard output as one JSON object per line.
+This is the machine-readable mode used by tooling.
+.SS Debugging
+.TP
+.B \-\-debug
+Enter the line-level debug protocol on standard input/output. The
+protocol is JSON-line in both directions and is intended to be driven
+by a front-end such as
+.BR lsldb (1).
+Implies
+.BR \-\-json\-events .
+.SS Other
+.TP
+.B \-\-version
+Print the
+.B slemu
+version and exit.
+.TP
+.BR \-h ", " \-\-help
+Show a usage summary and exit.
+.TP
+.B \-\-
+Stop option parsing; all following arguments are treated as bytecode
+files.
+.SH EXAMPLES
+.PP
+Run a single compiled script with stub HTTP and a fresh volume. The
+script's
+.BR state_entry ()
+fires immediately and any
+.B llOwnerSay
+or
+.B llSay
+output is written to standard output:
+.PP
+.RS
+.B slemu greeter.lslbc
+.RE
+.PP
+Enable real HTTP through
+.BR curl (1).
+Useful when you want to point a script at a local development server
+without re-deploying it inside the viewer:
+.PP
+.RS
+.B slemu \-\-http\-real vendor.lslbc
+.RE
+.PP
+Pin HTTP responses to a fixture file for deterministic tests. The
+fixture file is plain text; each entry binds a URL substring to a
+status code and body, and the first match wins:
+.PP
+.RS
+.B slemu \-\-http\-fixture tests/fixtures/marketplace.txt vendor.lslbc
+.RE
+.PP
+Drive a script as a scripted player. The command file may issue
+chats, touches, payments and dialog responses on behalf of named
+avatars; combined with
+.B \-\-config
+this gives a multi-avatar world that runs exactly the same way every
+time:
+.PP
+.RS
+.B slemu \-\-config worlds/club.cfg \-\-commands scenarios/buy_one.cmd club_vendor.lslbc
+.RE
+.PP
+Attach an interactive debugger. The
+.B \-\-debug
+flag turns standard input/output into a JSON-line debug channel;
+.BR lsldb (1)
+spawns
+.B slemu
+this way automatically. Direct use is mostly of interest to authors
+of alternative front-ends:
+.PP
+.RS
+.B slemu \-\-debug greeter.lslbc
+.RE
+.SH EXIT STATUS
+.TP
+.B 0
+The region ran to completion and every loaded script exited normally
+within the
+.B \-\-steps
+and
+.B \-\-timeout
+budgets.
+.TP
+.B 1
+At least one script raised an uncaught runtime error, or a budget was
+exceeded.
+.TP
+.B 2
+Driver error: missing or unreadable bytecode, bad fixture/config
+file, unwriteable volume, malformed command line.
+.SH FILES
+.TP
+.I ./slemu_volume/
+Default persistence directory. Holds per-script KVP, linkset data,
+inventory contents, notecards and the HTTP cache. Override with
+.BR \-\-volume .
+.TP
+.IR script .lslbc
+SLBC bytecode produced by
+.BR "lslc \-c" .
+.TP
+.I fixtures
+Plain-text HTTP fixture files loaded via
+.BR \-\-http\-fixture .
+.TP
+.I config files
+World configuration files loaded via
+.BR \-\-config .
+.TP
+.I command files
+Scripted player actions loaded via
+.BR \-\-commands .
+.SH BUGS
+.B slemu
+is a faithful but not bit-exact emulator: floating-point rounding,
+list memory accounting and event scheduling order can differ from
+the real Second Life simulator under heavy load. For most
+correctness testing the difference is invisible; for performance
+tuning it is not a substitute for measuring inside the viewer.
+.PP
+The
+.B \-\-http\-real
+mode shells out to
+.BR curl (1)
+and inherits its TLS/proxy configuration; there is no per-request
+sandbox.
+.PP
+Please report bugs to
+.MT shiho@sakurastudios.eu
+Shiho Sakura
+.ME .
+.SH SEE ALSO
+.BR lslc (1),
+.BR lsldb (1),
+.BR lsltest (1),
+.BR curl (1)
+.SH AUTHOR
+Shiho Sakura <shiho@sakurastudios.eu>, on behalf of Sakura Studios, IKE.
+.SH COPYRIGHT
+Copyright \(co 2026 Sakura Studios, IKE.
+.PP
+Released under the MIT License. See the
+.B LICENSE
+file in the source distribution for the full text. This is free
+software: you are free to change and redistribute it. There is
+.B NO WARRANTY
+to the extent permitted by law.
