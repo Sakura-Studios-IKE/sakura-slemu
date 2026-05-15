@@ -1,0 +1,7 @@
+"msg":"READY"
+"msg":"DK=deadbeef-1111-2222-3333-444455556666"
+"msg":"DN=Avatar"
+"msg":"DO=deadbeef-1111-2222-3333-444455556666"
+"msg":"DT=1"
+"msg":"DP=<0
+"msg":"DLN=0"

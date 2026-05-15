@@ -1,0 +1,3 @@
+URL_MATCH https://example.com/api/who
+STATUS 200
+BODY {"name":"Shiho"}

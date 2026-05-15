@@ -221,6 +221,14 @@ int region_run(Region *r) {
     if (r->volume) volume_load_economy(r->volume, r);
     for (int i = 0; i < r->n_scripts; i++) init_script(r->scripts[i]);
 
+    /* If the debugger attached, pause before running so the user can set
+     * breakpoints / catchpoints. We emit one "stopped" event and wait. */
+    if (r->dbg.enabled && r->n_scripts > 0) {
+        Script *first = r->scripts[0];
+        extern void dbg_handshake_pause(Region *r, Script *s);
+        dbg_handshake_pause(r, first);
+    }
+
     double t_start = now_seconds();
 
     for (;;) {

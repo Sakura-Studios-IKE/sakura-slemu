@@ -1,0 +1,3 @@
+LISTEN 9 Alice first
+LISTEN 9 Alice second
+EXIT

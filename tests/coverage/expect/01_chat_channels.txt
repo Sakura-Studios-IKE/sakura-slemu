@@ -1,0 +1,16 @@
+"kind":"say","ch":0
+"msg":"say-zero"
+"kind":"say","ch":7
+"msg":"say-pos"
+"kind":"whisper","ch":0
+"msg":"whisper-zero"
+"kind":"whisper","ch":-3
+"msg":"whisper-neg"
+"kind":"shout","ch":42
+"msg":"shout-pos"
+"kind":"shout","ch":-99
+"msg":"shout-neg"
+"kind":"region","ch":123
+"msg":"region-pos"
+"kind":"region","ch":-7
+"msg":"region-neg"

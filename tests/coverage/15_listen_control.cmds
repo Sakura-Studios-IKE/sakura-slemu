@@ -1,0 +1,5 @@
+LISTEN 11 Alice first
+LISTEN 11 Alice ignored
+TOUCH 1
+LISTEN 11 Alice second
+EXIT

@@ -1,0 +1,2 @@
+"kind":"owner"
+"msg":"secret-to-owner"

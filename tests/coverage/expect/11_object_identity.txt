@@ -1,0 +1,10 @@
+"msg":"KEY_OK"
+"msg":"OWNER_OK"
+"msg":"CREATOR_OK"
+"msg":"OBJNAME=Object"
+"msg":"OBJNAME2=PrimaryFooBar"
+"msg":"OBJDESC=a description"
+"msg":"SCRIPT=
+"msg":"SCRIPTID_OK"
+"msg":"POS_OK"
+"msg":"SETPOS_NOCRASH"

@@ -1,0 +1,6 @@
+"msg":"READY"
+"msg":"MSG=first"
+"msg":"OFF"
+"msg":"ON"
+"msg":"MSG=second"
+"msg":"BACK"

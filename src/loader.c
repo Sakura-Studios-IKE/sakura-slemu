@@ -130,11 +130,16 @@ static Expr *read_expr(Rdr *r) {
     return e;
 }
 
+static int g_format_version = 1;
 static Stmt *read_stmt(Rdr *r) {
     uint8_t tag; if (!r_u8(r, &tag)) return NULL;
     if (tag == 0xFF) return NULL;
     Stmt *s = xcalloc(1, sizeof(Stmt));
     s->kind = tag;
+    if (g_format_version >= 2) {
+        uint32_t line; r_u32(r, &line);
+        s->line = (int)line;
+    }
     switch (tag) {
         case S_EMPTY: break;
         case S_EXPR: s->u.expr = read_expr(r); break;
@@ -274,7 +279,12 @@ int program_load(Program *p, const char *path) {
     if (memcmp(magic, "SLBC\0", 5) != 0) { free(buf); return 0; }
     uint32_t ver, flags;
     if (!r_u32(&r, &ver) || !r_u32(&r, &flags)) { free(buf); return 0; }
+    g_format_version = (int)ver;
     p->flags = (int)flags;
+    if (g_format_version < 1 || g_format_version > 2) {
+        fprintf(stderr, "slemu: unsupported SLBC version %u (this build accepts 1..2)\n", ver);
+        free(buf); return 0;
+    }
 
     /* String pool */
     uint32_t n_strs; r_u32(&r, &n_strs);
@@ -306,6 +316,7 @@ int program_load(Program *p, const char *path) {
     p->funcs = n_f ? xcalloc(n_f, sizeof(FuncDecl)) : NULL;
     for (uint32_t i = 0; i < n_f; i++) {
         uint32_t name; r_u32(&r, &name);
+        if (g_format_version >= 2) { uint32_t ln; r_u32(&r, &ln); p->funcs[i].line = (int)ln; }
         uint8_t ret, hr, np;
         r_u8(&r, &ret); r_u8(&r, &hr); r_u8(&r, &np);
         p->funcs[i].name_idx = (int)name;
@@ -328,6 +339,7 @@ int program_load(Program *p, const char *path) {
     p->states = n_s ? xcalloc(n_s, sizeof(StateDecl)) : NULL;
     for (uint32_t i = 0; i < n_s; i++) {
         uint32_t name; r_u32(&r, &name);
+        if (g_format_version >= 2) { uint32_t ln; r_u32(&r, &ln); p->states[i].line = (int)ln; }
         uint8_t isd; r_u8(&r, &isd);
         uint32_t ne; r_u32(&r, &ne);
         p->states[i].name_idx = (int)name;
@@ -336,6 +348,7 @@ int program_load(Program *p, const char *path) {
         p->states[i].events = ne ? xcalloc(ne, sizeof(EventDecl)) : NULL;
         for (uint32_t j = 0; j < ne; j++) {
             uint32_t en; r_u32(&r, &en);
+            if (g_format_version >= 2) { uint32_t ln; r_u32(&r, &ln); p->states[i].events[j].line = (int)ln; }
             uint8_t np2; r_u8(&r, &np2);
             p->states[i].events[j].name_idx = (int)en;
             p->states[i].events[j].n_params = np2;

@@ -1,0 +1,5 @@
+"type":"money"
+"amount":25
+"ok":1
+"msg":"OK=1"
+"msg":"BAL=75"

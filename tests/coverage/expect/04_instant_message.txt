@@ -1,0 +1,4 @@
+"type":"chat"
+"to":"bbbb2222-2222-2222-2222-222222222222"
+"ch":-1
+"msg":"im-test-payload"

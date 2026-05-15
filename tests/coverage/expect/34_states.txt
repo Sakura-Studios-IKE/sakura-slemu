@@ -1,0 +1,5 @@
+"msg":"DEFAULT_ENTRY"
+"msg":"DEFAULT_EXIT"
+"msg":"WAITING_ENTRY"
+"msg":"WAITING_EXIT"
+"msg":"DEFAULT_ENTRY"

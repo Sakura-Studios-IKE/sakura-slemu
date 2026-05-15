@@ -1,0 +1,4 @@
+"msg":"MY_LINK=1"
+"msg":"NPRIMS=2"
+"msg":"L2KEY_OK"
+"msg":"CHILD_LINK=2"

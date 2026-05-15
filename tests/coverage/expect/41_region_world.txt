@@ -1,0 +1,4 @@
+"msg":"REGION=slemu-region"
+"msg":"OWNER_NAME=Test Owner"
+"msg":"UNAME=Test Owner"
+"msg":"UNKNOWN=[]"

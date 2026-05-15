@@ -1,0 +1,4 @@
+LISTEN 8 Bob magicword
+LISTEN 8 Alice notmagic
+LISTEN 8 Alice magicword
+EXIT

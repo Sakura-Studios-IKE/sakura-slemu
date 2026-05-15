@@ -65,6 +65,7 @@ static const char *src_uuid(Script *s) { return s && s->uuid ? s->uuid : ""; }
 
 void evt_chat(Region *r, Script *s, const char *kind, int ch, const char *msg) {
     FILE *f = out_stream(r);
+    if (r->dbg.enabled) dbg_check_catch(r, "chat", msg);
     if (r->json_events) {
         j_open(r, "chat");
         j_kv_str(f, "kind", kind);
@@ -98,6 +99,7 @@ void evt_chat_to(Region *r, Script *s, const char *to, int ch, const char *msg) 
 void evt_dialog(Region *r, Script *s, const char *to, const char *msg,
                 char **buttons, int n_buttons, int channel, int is_textbox) {
     FILE *f = out_stream(r);
+    if (r->dbg.enabled) dbg_check_catch(r, "dialog", msg);
     if (r->json_events) {
         j_open(r, is_textbox ? "textbox" : "dialog");
         j_kv_str(f, "src", src_name(s));
@@ -158,6 +160,10 @@ void evt_hud_text(Region *r, Script *s, const char *text, double rr, double gg, 
 
 void evt_money(Region *r, const char *from, const char *to, long long amt, int ok) {
     FILE *f = out_stream(r);
+    if (r->dbg.enabled) {
+        char d[256]; snprintf(d, sizeof d, "%s -> %s L$%lld", from?from:"", to?to:"", amt);
+        dbg_check_catch(r, "money", d);
+    }
     if (r->json_events) {
         j_open(r, "money");
         j_kv_str(f, "from", from);

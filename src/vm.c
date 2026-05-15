@@ -589,6 +589,9 @@ static int find_label_in(Stmt *body, int name_idx) {
 int vm_exec(Script *s, Stmt *st) {
     if (!st) return 0;
     if (g_frame && (g_frame->returning || g_frame->jumping)) return 0;
+    /* Debugger hook: line-level breakpoints / step. */
+    if (s->region->dbg.enabled && st->line > 0)
+        dbg_check_stmt(s->region, s, g_frame, st->line);
     switch (st->kind) {
         case S_EMPTY: return 0;
         case S_EXPR: { SValue v = vm_eval(s, st->u.expr); sv_free(&v); return 0; }

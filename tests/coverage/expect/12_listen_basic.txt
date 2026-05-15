@@ -1,0 +1,2 @@
+"msg":"READY"
+"msg":"HEARD ch=7 from=Alice msg=hello-listener"

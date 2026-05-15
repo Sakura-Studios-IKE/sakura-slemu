@@ -1,0 +1,4 @@
+"msg":"OPENED"
+"what":"dialog_open","passed":1
+"msg":"PICKED=B"
+"what":"dialog_open","passed":0

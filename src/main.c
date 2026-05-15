@@ -43,6 +43,10 @@ static void help(const char *p) {
 "  --commands FILE           Load a command file (player actions)\n"
 "  --json-events             Emit events as one JSON object per line\n"
 "\n"
+"Debugging:\n"
+"  --debug                   Enter the line-level debug protocol on stdin/stdout\n"
+"                            (use sakura-lsldb as a friendly front-end)\n"
+"\n"
 "Other:\n"
 "  --version                 Print version and exit\n"
 "  -h, --help                Show this help message\n",
@@ -122,6 +126,11 @@ int main(int argc, char **argv) {
             commands_path = argv[++i]; i++; continue;
         }
         if (!strcmp(a, "--json-events")) { r.json_events = 1; i++; continue; }
+        if (!strcmp(a, "--debug")) {
+            r.json_events = 1;
+            dbg_init(&r, stdin, stdout);
+            i++; continue;
+        }
         if (!strcmp(a, "--")) { i++; break; }
         fprintf(stderr, "slemu: unrecognised option '%s' (try --help)\n", a);
         return 2;
@@ -169,6 +178,8 @@ int main(int argc, char **argv) {
     }
 
     int rc = region_run(&r);
+    if (r.dbg.enabled) dbg_notify_exit(&r);
+    dbg_free(&r);
     region_free(&r);
     return rc;
 }

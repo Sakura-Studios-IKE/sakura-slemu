@@ -1,0 +1,3 @@
+"msg":"OPENED"
+"what":"dialog_open","passed":1
+"msg":"TEXT=user-typed-this"

@@ -94,6 +94,7 @@ typedef struct Expr {
 
 typedef struct Stmt {
     int kind;                /* StmtKind */
+    int line;                /* source line, 0 if unknown */
     union {
         struct Expr *expr;
         struct { int t; int name_idx; struct Expr *init; } decl;
@@ -127,6 +128,7 @@ typedef struct GlobalVar {
 
 typedef struct FuncDecl {
     int name_idx;
+    int line;
     int ret;
     int has_return_type;
     int n_params;
@@ -136,6 +138,7 @@ typedef struct FuncDecl {
 
 typedef struct EventDecl {
     int name_idx;
+    int line;
     int n_params;
     Param *params;
     Stmt *body;
@@ -143,6 +146,7 @@ typedef struct EventDecl {
 
 typedef struct StateDecl {
     int name_idx;
+    int line;
     int is_default;
     int n_events;
     EventDecl *events;
@@ -285,6 +289,43 @@ typedef struct Volume Volume;
 
 typedef struct HttpFixture HttpFixture;
 
+typedef struct DbgBreakpoint {
+    int id;
+    char *file;       /* source file name from #line markers; may be NULL = any */
+    int line;
+    int enabled;
+    int hit_count;
+    struct DbgBreakpoint *next;
+} DbgBreakpoint;
+
+typedef struct DbgCatchpoint {
+    int id;
+    char *kind;       /* "chat", "money", "dialog", "state_change", "http_out", ... */
+    int enabled;
+    struct DbgCatchpoint *next;
+} DbgCatchpoint;
+
+typedef enum {
+    DBG_RUN = 0,      /* free-running */
+    DBG_STEP_STMT,    /* break at the next statement */
+    DBG_PAUSED,       /* stopped, waiting for a command */
+    DBG_DEAD          /* quit requested */
+} DbgMode;
+
+typedef struct DbgState {
+    int enabled;
+    DbgMode mode;
+    int next_bp_id;
+    int next_cp_id;
+    DbgBreakpoint *bps;
+    DbgCatchpoint *cps;
+    FILE *cmd_in;        /* JSON commands come here */
+    FILE *evt_out;        /* JSON events go here (== Region->out) */
+    /* current frame / script we are stopped in (so locals/globals lookups work) */
+    void *cur_frame;     /* opaque cast to Frame*, defined in vm.c */
+    Script *cur_script;
+} DbgState;
+
 struct Region {
     Script **scripts;
     int n_scripts;
@@ -329,6 +370,9 @@ struct Region {
     char **command_lines;
     int n_command_lines;
     int next_command;
+
+    /* Debug protocol state */
+    DbgState dbg;
 };
 
 typedef struct InboundUrl {
@@ -408,6 +452,16 @@ int  config_load(Region *r, const char *path);
 
 /* ------------------ Snapshots ------------------ */
 void snapshot_dump(Region *r, FILE *out);
+
+/* ------------------ Debugger protocol ------------------ */
+void dbg_init(Region *r, FILE *cmd_in, FILE *evt_out);
+void dbg_free(Region *r);
+/* Called by the VM before executing each statement / dispatching each event.
+ * Returns when the debugger says "continue" / "step" / etc. */
+void dbg_check_stmt(Region *r, Script *s, void *frame, int line);
+void dbg_check_event(Region *r, Script *s, const char *event_name);
+void dbg_check_catch(Region *r, const char *kind, const char *detail);
+void dbg_notify_exit(Region *r);
 
 /* Send an event to ONE script. Takes ownership of args. */
 void script_push_event(Script *s, const char *name, SValue *args, int n_args);

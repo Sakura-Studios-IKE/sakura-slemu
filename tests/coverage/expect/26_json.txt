@@ -1,0 +1,6 @@
+"msg":"N=Shiho"
+"msg":"B=42"
+"msg":"VT_OK"
+"msg":"ARR=[10,20,30]"
+"msg":"ARR_LEN=3"
+"msg":"OBJ={\"k1\":1,\"k2\":2}"

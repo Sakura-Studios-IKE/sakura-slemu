@@ -1,0 +1,11 @@
+"msg":"MD5=31d46731a4422c15db9cbee93491ca47"
+"msg":"SHA1=aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d"
+"msg":"SHA256_LEN_OK"
+"msg":"B64=SGkh"
+"msg":"B64R=Hi!"
+"msg":"IB64=AQIDBA==
+"msg":"IB64R=16909060"
+"msg":"ESC=hello%20world%20%26%20friends"
+"msg":"UNESC=hello world & friends"
+"msg":"HMAC_DETERMINISTIC"
+"msg":"HASH_DETERMINISTIC"

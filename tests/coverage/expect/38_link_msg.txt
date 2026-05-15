@@ -1,0 +1,3 @@
+"msg":"CHILD_READY"
+"msg":"ROOT_SENT"
+"msg":"CHILD_GOT src=1 num=42 str=ping"
