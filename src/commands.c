@@ -201,17 +201,28 @@ int commands_pump(Region *r) {
         const char *msg = rest_of_line(p);
         const char *uuid = "00000000-0000-0000-0000-000000000000";
         const char *name = who ? who : "speaker";
-        Avatar *av = who ? region_find_avatar(r, who) : NULL;
-        if (av) { uuid = av->uuid; name = av->name ? av->name : "Avatar"; }
-        else if (r->n_avatars > 0 && who && strcmp(who, "*") == 0) {
-            uuid = r->avatars[0].uuid; name = r->avatars[0].name ? r->avatars[0].name : "Avatar";
+        /* Resolve the speaker by UUID first, then by name. Treat "*" as
+         * "the owner". */
+        Avatar *av = NULL;
+        if (who) {
+            av = region_find_avatar(r, who);
+            if (!av) {
+                for (int i = 0; i < r->n_avatars; i++)
+                    if (r->avatars[i].name && strcmp(r->avatars[i].name, who) == 0)
+                        { av = &r->avatars[i]; break; }
+            }
+            if (!av && strcmp(who, "*") == 0 && r->n_avatars > 0) av = &r->avatars[0];
         }
+        if (av) { uuid = av->uuid; name = av->name ? av->name : "Avatar"; }
         /* deliver to every script's listens */
         for (int i = 0; i < r->n_scripts; i++) {
             Script *s = r->scripts[i];
             for (ListenEntry *le = s->listens; le; le = le->next) {
                 if (!le->active || le->channel != ch) continue;
                 if (le->name_filter && *le->name_filter && strcmp(le->name_filter, name) != 0) continue;
+                if (le->id_filter && *le->id_filter
+                    && strcmp(le->id_filter, "00000000-0000-0000-0000-000000000000") != 0
+                    && strcmp(le->id_filter, uuid) != 0) continue;
                 if (le->msg_filter && *le->msg_filter && strcmp(le->msg_filter, msg) != 0) continue;
                 SValue *args = xmalloc(sizeof(SValue)*4);
                 args[0] = sv_int(ch);

@@ -27,7 +27,10 @@ Avatar *region_find_avatar(Region *r, const char *uuid) {
 int region_add_group(Region *r, const char *uuid, const char *name) {
     for (int i = 0; i < r->n_groups; i++)
         if (strcmp(r->groups[i].uuid, uuid) == 0) return i;
-    r->groups = xrealloc(r->groups, sizeof(Group) * (size_t)(r->n_groups + 1));
+    /* xrealloc preserves the old members pointer of existing groups, which
+     * is critical: zero only the NEW slot. */
+    Group *new_arr = xrealloc(r->groups, sizeof(Group) * (size_t)(r->n_groups + 1));
+    r->groups = new_arr;
     Group *g = &r->groups[r->n_groups++];
     memset(g, 0, sizeof *g);
     g->uuid = xstrdup(uuid);
@@ -120,6 +123,9 @@ int region_add_avatar(Region *r, const char *uuid, long long balance, const char
         }
     r->avatars = xrealloc(r->avatars, sizeof(Avatar) * (size_t)(r->n_avatars + 1));
     Avatar *a = &r->avatars[r->n_avatars++];
+    memset(a, 0, sizeof *a);          /* zero the freshly grown slot — fixes
+                                       * a segfault when snapshot_dump walks
+                                       * Avatar::attached_object on uninit memory */
     a->uuid = xstrdup(uuid);
     a->balance = balance;
     a->name = name ? xstrdup(name) : xstrdup("");
