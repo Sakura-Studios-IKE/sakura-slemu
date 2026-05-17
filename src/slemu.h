@@ -419,6 +419,7 @@ void evt_dialog(Region *r, Script *s, const char *to, const char *msg,
 void evt_loadurl(Region *r, Script *s, const char *to, const char *label, const char *url);
 void evt_hud_text(Region *r, Script *s, const char *text, double rr, double gg, double bb, double alpha);
 void evt_money(Region *r, const char *from, const char *to, long long amt, int ok);
+void evt_permission_request(Region *r, Script *s, const char *who, int mask);
 void evt_link_msg(Region *r, Script *from, int target_link, long long num, const char *str, const char *id);
 void evt_http_out(Region *r, Script *s, const char *url, const char *method, int status, size_t body_len);
 void evt_state_change(Region *r, Script *s, const char *from, const char *to);
@@ -427,6 +428,7 @@ void evt_die(Region *r, Script *s);
 void evt_reset(Region *r, Script *s);
 void evt_info(Region *r, const char *fmt, ...);    /* generic info line */
 void evt_assertion(Region *r, const char *what, int passed, const char *detail);
+void evt_lsd_set(Region *r, Script *s, const char *key, const char *value);
 
 /* ------------------ Open dialogs ------------------ */
 void dialog_open(Region *r, Script *s, const char *to, const char *msg,

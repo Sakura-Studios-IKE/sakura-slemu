@@ -178,6 +178,59 @@ void evt_money(Region *r, const char *from, const char *to, long long amt, int o
     }
 }
 
+/* Render an LSL permission-mask bitfield as a "|"-joined string of
+ * canonical PERMISSION_* names. The trailing _DEBIT / _TAKE_CONTROLS
+ * tokens are what curriculum tests look for. Unknown bits are left
+ * out of the string but contribute to the numeric mirror.
+ */
+static void perm_mask_str(int mask, char *buf, size_t cap) {
+    static const struct { int bit; const char *name; } TBL[] = {
+        {0x001, "PERMISSION_DEBIT_LEGACY"},
+        {0x002, "PERMISSION_DEBIT"},
+        {0x004, "PERMISSION_TAKE_CONTROLS"},
+        {0x008, "PERMISSION_REMAP_CONTROLS"},
+        {0x010, "PERMISSION_TRIGGER_ANIMATION"},
+        {0x020, "PERMISSION_ATTACH"},
+        {0x040, "PERMISSION_RELEASE_OWNERSHIP"},
+        {0x080, "PERMISSION_CHANGE_LINKS"},
+        {0x100, "PERMISSION_CHANGE_JOINTS"},
+        {0x200, "PERMISSION_CHANGE_PERMISSIONS"},
+        {0x400, "PERMISSION_TRACK_CAMERA"},
+        {0x800, "PERMISSION_CONTROL_CAMERA"},
+    };
+    buf[0] = '\0';
+    int n = sizeof(TBL)/sizeof(TBL[0]);
+    int first = 1;
+    for (int i = 0; i < n; i++) {
+        if (mask & TBL[i].bit) {
+            size_t len = strlen(buf);
+            if (len + strlen(TBL[i].name) + 2 >= cap) break;
+            if (!first) { buf[len++] = '|'; buf[len] = '\0'; }
+            strcat(buf, TBL[i].name);
+            first = 0;
+        }
+    }
+    if (first) snprintf(buf, cap, "%d", mask);
+}
+
+void evt_permission_request(Region *r, Script *s, const char *who, int mask) {
+    FILE *f = out_stream(r);
+    char names[256];
+    perm_mask_str(mask, names, sizeof names);
+    if (r->json_events) {
+        j_open(r, "permission-request");
+        j_kv_str(f, "src", src_name(s));
+        j_kv_str(f, "who", who ? who : "");
+        j_kv_str(f, "mask", names);
+        j_kv_int(f, "mask_bits", mask);
+        j_close(r);
+    } else {
+        fprintf(f, "[perm  %s requests %s from %s]\n",
+            src_name(s), names, who ? who : "?");
+        fflush(f);
+    }
+}
+
 void evt_link_msg(Region *r, Script *from, int target_link, long long num,
                   const char *str, const char *id) {
     FILE *f = out_stream(r);
@@ -271,6 +324,21 @@ void evt_info(Region *r, const char *fmt, ...) {
         fflush(f);
     }
     va_end(ap);
+}
+
+void evt_lsd_set(Region *r, Script *s, const char *key, const char *value) {
+    FILE *f = out_stream(r);
+    if (r->json_events) {
+        j_open(r, "lsd_set");
+        j_kv_str(f, "src", src_name(s));
+        j_kv_str(f, "key", key ? key : "");
+        j_kv_str(f, "value", value ? value : "");
+        j_close(r);
+    } else {
+        fprintf(f, "[lsd   %s] %s=%s\n", src_name(s),
+                key ? key : "", value ? value : "");
+        fflush(f);
+    }
 }
 
 void evt_assertion(Region *r, const char *what, int passed, const char *detail) {

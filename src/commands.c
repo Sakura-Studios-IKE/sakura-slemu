@@ -82,9 +82,23 @@ void chatlog_record(const char *kind, int ch, const char *msg) {
     g_chat_log = c;
 }
 
+/* Translate test-facing chat kind aliases ("owner-say" -> "owner",
+ * "region-say" -> "region", "instant-message" -> "im") so the curriculum's
+ * `assert_said(kind=...)` lines match the kinds we actually record. */
+static const char *chatlog_alias(const char *k) {
+    if (!k) return "";
+    if (!strcmp(k, "owner-say") || !strcmp(k, "owner_say")) return "owner";
+    if (!strcmp(k, "region-say") || !strcmp(k, "region_say")) return "region";
+    if (!strcmp(k, "region-say-to") || !strcmp(k, "region-to")) return "region-to";
+    if (!strcmp(k, "instant-message") || !strcmp(k, "instant_message")
+        || !strcmp(k, "im")) return "im";
+    return k;
+}
+
 static int chatlog_matches(const char *kind, int ch, const char *substr) {
+    const char *want = chatlog_alias(kind);
     for (ChatRec *c = g_chat_log; c; c = c->next) {
-        if (kind && *kind && strcmp(c->kind, kind) != 0) continue;
+        if (want && *want && strcmp(c->kind, want) != 0) continue;
         if (ch != INT_MAX_SENTINEL && c->ch != ch) continue;
         if (substr && *substr && !strstr(c->msg, substr)) continue;
         return 1;

@@ -241,18 +241,35 @@ int region_run(Region *r) {
         if (r->max_steps > 0 && r->n_steps >= r->max_steps) break;
         if (r->wall_timeout > 0 && (now_seconds() - t_start) > r->wall_timeout) break;
 
-        /* Fire timers that are due (virtual_now == real elapsed). */
-        double el = now_seconds() - t_start;
-        r->virtual_now = el;
+        /* virtual_now = accumulated WAIT offset. Tests use
+         * `world.advance(seconds=N)` which appends WAIT N; that bumps
+         * virtual_offset and we treat it as time having passed. We don't
+         * include wall-elapsed because tests should be hermetic and
+         * deterministic — they only see timers they explicitly waited for. */
+        double el = r->virtual_offset;
 
+        /* Find the earliest pending timer due across all scripts; if it
+         * falls within el, advance virtual_now to that moment, fire that
+         * one timer, and let the main loop drain the queued event before
+         * checking the next timer. This lets scripts that reschedule
+         * themselves inside the timer (e.g. doubling cadence) be timed
+         * against the virtual_now AT the firing moment, not at el. */
         int any_progress = 0;
+        double earliest = el + 1.0; Script *fire = NULL;
         for (int i = 0; i < r->n_scripts; i++) {
             Script *s = r->scripts[i];
-            if (s->timer_interval > 0 && el >= s->timer_due) {
-                script_push_event(s, "timer", NULL, 0);
-                s->timer_due += s->timer_interval;
-                any_progress = 1;
+            if (s->timer_interval > 0 && s->timer_due <= el && s->timer_due < earliest) {
+                earliest = s->timer_due;
+                fire = s;
             }
+        }
+        if (fire) {
+            r->virtual_now = earliest;
+            script_push_event(fire, "timer", NULL, 0);
+            fire->timer_due += fire->timer_interval;
+            any_progress = 1;
+        } else {
+            r->virtual_now = el;
         }
 
         /* Drain queues one event per script per cycle (round-robin). */
@@ -298,14 +315,11 @@ int region_run(Region *r) {
 
         if (!any_progress) {
             /* No script-level event to run. Try to consume the next CLI
-             * command (touch, dialog reply, etc.). If none, decide whether
-             * to wait for timers. */
+             * command (touch, dialog reply, etc.). If none, exit the loop:
+             * virtual time only advances via WAIT, so spinning here would
+             * not make any further timer event due. */
             if (commands_pump(r)) { r->n_steps++; continue; }
-            int waiting = 0;
-            for (int i = 0; i < r->n_scripts; i++)
-                if (r->scripts[i]->timer_interval > 0) { waiting = 1; break; }
-            if (!waiting) break;
-            sleep_seconds(0.05);
+            break;
         }
     }
     /* Drain remaining commands after the script settles (lets a test

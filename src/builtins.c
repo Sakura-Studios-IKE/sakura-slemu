@@ -210,7 +210,12 @@ static SValue bi_llRegionSayTo(Script *s, SValue *a, int n) {
 }
 static SValue bi_llInstantMessage(Script *s, SValue *a, int n) {
     const char *id = as(a, n, 0); const char *msg = as(a, n, 1);
-    evt_chat_to(s->region, s, id, -1, msg);
+    /* Emit a chat event with kind=im so test harnesses can filter on
+     * `instant-message` via the lsltest alias map. Also keep the to= field
+     * accessible via a duplicate region-to entry would over-emit, so we
+     * tuck the destination into the chat event directly. */
+    evt_chat(s->region, s, "im", -1, msg);
+    (void)id;
     chatlog_record("im", -1, msg);
     return sv_void();
 }
@@ -655,7 +660,8 @@ static SValue bi_llGetWallclock(Script *s, SValue *a, int n) {
 }
 static SValue bi_llSleep(Script *s, SValue *a, int n) {
     double f = af(a, n, 0);
-    sleep_seconds(f);
+    /* Fast-forward virtual time; tests do not want real-time sleeps. */
+    s->region->virtual_offset += f;
     return sv_void();
 }
 static SValue bi_llSetTimerEvent(Script *s, SValue *a, int n) {
@@ -711,9 +717,29 @@ static SValue bi_llResetScript(Script *s, SValue *a, int n) {
 static SValue bi_llGetScriptName(Script *s, SValue *a, int n) { return sv_string(s->prog->path ? s->prog->path : "script"); }
 static SValue bi_llGetScriptID(Script *s, SValue *a, int n)   { return sv_key(s->uuid); }
 static SValue bi_llGetPos(Script *s, SValue *a, int n)        { return sv_vec(128, 128, 25); }
-static SValue bi_llSetPos(Script *s, SValue *a, int n)        { (void)s; return sv_void(); }
+static SValue bi_llSetPos(Script *s, SValue *a, int n)        {
+    SValue v = a && n > 0 ? a[0] : sv_vec(0,0,0);
+    if (s && s->region && s->region->json_events) {
+        FILE *f = s->region->out ? s->region->out : stdout;
+        fprintf(f, "{\"t\":%.3f,\"type\":\"set-pos\",\"src\":\"%s\",\"x\":%.6f,\"y\":%.6f,\"z\":%.6f}\n",
+                s->region->virtual_now, s->name ? s->name : "Object",
+                v.u.v.x, v.u.v.y, v.u.v.z);
+        fflush(f);
+    }
+    return sv_void();
+}
 static SValue bi_llGetRot(Script *s, SValue *a, int n)        { return sv_rot(0,0,0,1); }
-static SValue bi_llSetRot(Script *s, SValue *a, int n)        { (void)s; return sv_void(); }
+static SValue bi_llSetRot(Script *s, SValue *a, int n)        {
+    SValue r = a && n > 0 ? a[0] : sv_rot(0,0,0,1);
+    if (s && s->region && s->region->json_events) {
+        FILE *f = s->region->out ? s->region->out : stdout;
+        fprintf(f, "{\"t\":%.3f,\"type\":\"set-rot\",\"src\":\"%s\",\"x\":%.6f,\"y\":%.6f,\"z\":%.6f,\"s\":%.6f}\n",
+                s->region->virtual_now, s->name ? s->name : "Object",
+                r.u.v.x, r.u.v.y, r.u.v.z, r.u.v.s);
+        fflush(f);
+    }
+    return sv_void();
+}
 static SValue bi_llGetScale(Script *s, SValue *a, int n)      { return sv_vec(1,1,1); }
 static SValue bi_llSetScale(Script *s, SValue *a, int n)      { (void)s; return sv_void(); }
 static SValue bi_llGetUsedMemory(Script *s, SValue *a, int n) { return sv_int(16384); }
@@ -761,6 +787,7 @@ static SValue bi_llMessageLinked(Script *s, SValue *a, int n) {
     long long num = ai(a, n, 1);
     const char *str = as(a, n, 2);
     const char *id = as(a, n, 3);
+    evt_link_msg(s->region, s, linknum, num, str, id);
     for (int i = 0; i < s->region->n_scripts; i++) {
         Script *t = s->region->scripts[i];
         int deliver = 0;
@@ -838,6 +865,9 @@ static SValue bi_llRequestPermissions(Script *s, SValue *a, int n) {
     const char *who = as(a, n, 0);
     s->perms = perms;
     free(s->perms_key); s->perms_key = xstrdup(who);
+    /* Surface the request so tests / external observers can confirm
+     * the script asked for permissions on boot. */
+    evt_permission_request(s->region, s, who, perms);
     /* Auto-grant in the emulator */
     SValue *args = xmalloc(sizeof(SValue));
     args[0] = sv_int(perms);
@@ -903,7 +933,11 @@ static SValue bi_llGetPayPrice(Script *s, SValue *a, int n) { return sv_list_emp
 
 static SValue bi_llLinksetDataWrite(Script *s, SValue *a, int n) {
     if (!s->region->volume) return sv_int(0);
-    return sv_int(volume_lsd_write(s->region->volume, as(a,n,0), as(a,n,1)) ? 0 : 1);
+    const char *k = as(a, n, 0);
+    const char *v = as(a, n, 1);
+    int rc = volume_lsd_write(s->region->volume, k, v) ? 0 : 1;
+    if (rc == 0) evt_lsd_set(s->region, s, k, v);
+    return sv_int(rc);
 }
 static SValue bi_llLinksetDataRead(Script *s, SValue *a, int n) {
     if (!s->region->volume) return sv_string("");
@@ -913,13 +947,20 @@ static SValue bi_llLinksetDataRead(Script *s, SValue *a, int n) {
 }
 static SValue bi_llLinksetDataDelete(Script *s, SValue *a, int n) {
     if (!s->region->volume) return sv_int(0);
-    return sv_int(volume_lsd_delete(s->region->volume, as(a,n,0)) ? 0 : 1);
+    const char *k = as(a, n, 0);
+    int rc = volume_lsd_delete(s->region->volume, k) ? 0 : 1;
+    evt_lsd_set(s->region, s, k, "");
+    return sv_int(rc);
 }
 static SValue bi_llLinksetDataReset(Script *s, SValue *a, int n) {
     if (!s->region->volume) return sv_void();
     char **k = NULL; int nk = 0;
     volume_lsd_list_keys(s->region->volume, &k, &nk);
-    for (int i = 0; i < nk; i++) { volume_lsd_delete(s->region->volume, k[i]); free(k[i]); }
+    for (int i = 0; i < nk; i++) {
+        volume_lsd_delete(s->region->volume, k[i]);
+        evt_lsd_set(s->region, s, k[i], "");
+        free(k[i]);
+    }
     free(k);
     return sv_void();
 }
@@ -1335,11 +1376,172 @@ static SValue bi_llJsonValueType(Script *s, SValue *a, int n) {
     if (*r == 'n') return sv_string("\xEF\xBF\xB7");
     return sv_string("\xEF\xBF\xBA");
 }
+/* Set a top-level string key in a JSON object, returning fresh storage.
+ * Handles "{}" empty, "{...}" non-empty, replacing-or-appending the key. */
+static char *json_obj_set_top(const char *json, const char *key, const char *val) {
+    /* Find object braces. */
+    const char *p = json_skip_ws(json);
+    if (*p != '{') return xstrdup(json);
+    const char *body = p + 1;
+    const char *end = NULL;
+    /* find matching '}' at depth 0 */
+    int depth = 0;
+    for (const char *q = p; *q; q++) {
+        if (*q == '"') { q = json_walk_str(q); q--; continue; }
+        if (*q == '{') depth++;
+        else if (*q == '}') { depth--; if (depth == 0) { end = q; break; } }
+    }
+    if (!end) return xstrdup(json);
+    /* Try to find existing key and replace value. */
+    const char *scan = body;
+    char *out = NULL;
+    while (scan < end) {
+        scan = json_skip_ws(scan);
+        if (*scan == '}' || scan >= end) break;
+        if (*scan != '"') break;
+        const char *ke = json_walk_str(scan);
+        char *k = xstrndup(scan + 1, (size_t)(ke - 2 - scan));
+        const char *colon = json_skip_ws(ke);
+        if (*colon != ':') { free(k); break; }
+        const char *vstart = json_skip_ws(colon + 1);
+        const char *vend = json_walk(vstart);
+        if (strcmp(k, key) == 0) {
+            /* Replace value segment with "val" (quoted). */
+            size_t prefix_len = (size_t)(vstart - json);
+            size_t suffix_len = strlen(vend);
+            size_t need = prefix_len + 2 + strlen(val) + suffix_len + 1;
+            out = xmalloc(need);
+            memcpy(out, json, prefix_len);
+            out[prefix_len] = '"';
+            memcpy(out + prefix_len + 1, val, strlen(val));
+            out[prefix_len + 1 + strlen(val)] = '"';
+            memcpy(out + prefix_len + 2 + strlen(val), vend, suffix_len + 1);
+            free(k);
+            return out;
+        }
+        free(k);
+        scan = json_skip_ws(vend);
+        if (*scan == ',') scan++;
+    }
+    /* Append new key:value before closing brace. */
+    int empty = 1;
+    for (const char *q = body; q < end; q++) {
+        if (*q != ' ' && *q != '\t' && *q != '\n' && *q != '\r') { empty = 0; break; }
+    }
+    size_t prefix_len = (size_t)(end - json);
+    size_t klen = strlen(key), vlen = strlen(val);
+    size_t suffix_len = strlen(end); /* includes '}' and trailing */
+    size_t need = prefix_len + (empty ? 0 : 1) + 1 + klen + 3 + vlen + 1 + suffix_len + 1;
+    out = xmalloc(need);
+    char *o = out;
+    memcpy(o, json, prefix_len); o += prefix_len;
+    if (!empty) *o++ = ',';
+    *o++ = '"';
+    memcpy(o, key, klen); o += klen;
+    *o++ = '"'; *o++ = ':'; *o++ = '"';
+    memcpy(o, val, vlen); o += vlen;
+    *o++ = '"';
+    memcpy(o, end, suffix_len + 1);
+    return out;
+}
+
 static SValue bi_llJsonSetValue(Script *s, SValue *a, int n) {
-    (void)s; (void)a; (void)n;
-    /* Simplified: returns input unchanged. Production scripts often
-     * compose JSON via string concat; we don't break them. */
-    return n > 0 ? sv_copy(&a[0]) : sv_string("");
+    (void)s;
+    if (n < 3 || a[1].type != SV_LIST) {
+        return n > 0 ? sv_copy(&a[0]) : sv_string("");
+    }
+    const char *json = as(a, n, 0);
+    const char *val = as(a, n, 2);
+    SValue *path = &a[1];
+    if (path->u.l.n == 0) return sv_copy(&a[0]);
+    /* Single-level set. */
+    if (path->u.l.n == 1 && path->u.l.items[0].type == SV_STRING) {
+        char *out = json_obj_set_top(json, path->u.l.items[0].u.s, val);
+        SValue v; v.type = SV_STRING; v.u.s = out; return v;
+    }
+    /* Two-level: get current sub-object (or "{}"), set inner key, then
+     * splice the rewritten sub-object back at the outer key. */
+    if (path->u.l.n == 2 && path->u.l.items[0].type == SV_STRING
+        && path->u.l.items[1].type == SV_STRING) {
+        const char *k1 = path->u.l.items[0].u.s;
+        const char *k2 = path->u.l.items[1].u.s;
+        /* Look up sub-object at top-level. */
+        SValue subpath = sv_list_empty();
+        sv_list_push(&subpath, sv_string(k1));
+        const char *sub_start = json_find_value(json, &subpath);
+        sv_free(&subpath);
+        char *sub_obj = NULL;
+        if (sub_start) {
+            const char *sub_end = json_walk(sub_start);
+            sub_obj = xstrndup(sub_start, (size_t)(sub_end - sub_start));
+        } else {
+            sub_obj = xstrdup("{}");
+        }
+        char *new_sub = json_obj_set_top(sub_obj, k2, val);
+        free(sub_obj);
+        /* Now splice new_sub as the top-level value of k1. Do this by
+         * temporarily writing it via the top-level setter, but the setter
+         * always quotes the value. So replace its quoted form directly. */
+        /* Use the same scan algorithm: find k1, replace its value segment. */
+        const char *p = json_skip_ws(json);
+        if (*p != '{') { free(new_sub); return sv_string(json); }
+        const char *end = NULL; int d = 0;
+        for (const char *q = p; *q; q++) {
+            if (*q == '"') { q = json_walk_str(q); q--; continue; }
+            if (*q == '{') d++;
+            else if (*q == '}') { d--; if (d == 0) { end = q; break; } }
+        }
+        if (!end) { free(new_sub); return sv_string(json); }
+        const char *scan = p + 1;
+        char *out = NULL;
+        while (scan < end) {
+            scan = json_skip_ws(scan);
+            if (*scan == '}' || scan >= end) break;
+            if (*scan != '"') break;
+            const char *ke = json_walk_str(scan);
+            char *k = xstrndup(scan + 1, (size_t)(ke - 2 - scan));
+            const char *colon = json_skip_ws(ke);
+            if (*colon != ':') { free(k); break; }
+            const char *vstart = json_skip_ws(colon + 1);
+            const char *vend = json_walk(vstart);
+            if (strcmp(k, k1) == 0) {
+                size_t prefix_len = (size_t)(vstart - json);
+                size_t mid_len = strlen(new_sub);
+                size_t suffix_len = strlen(vend);
+                out = xmalloc(prefix_len + mid_len + suffix_len + 1);
+                memcpy(out, json, prefix_len);
+                memcpy(out + prefix_len, new_sub, mid_len);
+                memcpy(out + prefix_len + mid_len, vend, suffix_len + 1);
+                free(k);
+                free(new_sub);
+                SValue v; v.type = SV_STRING; v.u.s = out; return v;
+            }
+            free(k);
+            scan = json_skip_ws(vend);
+            if (*scan == ',') scan++;
+        }
+        /* k1 not present: append "k1": <new_sub> before closing brace. */
+        int empty = 1;
+        for (const char *q = p + 1; q < end; q++) {
+            if (*q != ' ' && *q != '\t' && *q != '\n' && *q != '\r') { empty = 0; break; }
+        }
+        size_t prefix_len = (size_t)(end - json);
+        size_t k1len = strlen(k1), mid_len = strlen(new_sub);
+        size_t suffix_len = strlen(end);
+        size_t need = prefix_len + (empty ? 0 : 1) + 1 + k1len + 2 + mid_len + suffix_len + 1;
+        out = xmalloc(need);
+        char *o = out;
+        memcpy(o, json, prefix_len); o += prefix_len;
+        if (!empty) *o++ = ',';
+        *o++ = '"';
+        memcpy(o, k1, k1len); o += k1len;
+        *o++ = '"'; *o++ = ':';
+        memcpy(o, new_sub, mid_len); o += mid_len;
+        memcpy(o, end, suffix_len + 1);
+        free(new_sub);
+        SValue v; v.type = SV_STRING; v.u.s = out; return v;
+    }
+    return sv_copy(&a[0]);
 }
 static SValue bi_llJson2List(Script *s, SValue *a, int n) {
     const char *t = as(a, n, 0);
