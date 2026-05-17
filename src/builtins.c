@@ -1738,6 +1738,1218 @@ SValue builtins_const(const char *name) {
 }
 
 /* ============================================================== */
+
+/* ============================================================== */
+/* Wiki-sync stubs                                                 */
+/* ============================================================== */
+
+static SValue bi_llAddToLandBanList(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llAddToLandPassList(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llAgentInExperience(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llAngleBetween(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llApplyImpulse(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llApplyRotationalImpulse(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llAttachToAvatar(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llAttachToAvatarTemp(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llAvatarOnLinkSitTarget(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llAvatarOnSitTarget(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llAxes2Rot(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_rot(0, 0, 0, 1);
+}
+static SValue bi_llAxisAngle2Rot(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_rot(0, 0, 0, 1);
+}
+static SValue bi_llBreakAllLinks(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llBreakLink(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llCastRay(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llCharacterUpdate(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llClearCameraParams(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llClearLinkMedia(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llClearPrimMedia(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llCloseRemoteDataChannel(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llCloud(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llCollisionFilter(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llCollisionSound(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llCollisionSprite(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llComputeHash(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llCreateCharacter(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llCreateKeyValue(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llCreateLink(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llDamageEvent(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llDataSizeKeyValue(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llDeleteCharacter(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llDeleteKeyValue(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llDetachFromAvatar(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llDetectedGrab(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llDetectedGroup(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llDetectedRot(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_rot(0, 0, 0, 1);
+}
+static SValue bi_llDetectedTouchBinormal(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llDetectedTouchFace(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llDetectedTouchNormal(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llDetectedTouchPos(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llDetectedTouchST(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llDetectedTouchUV(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llDetectedVel(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llEmail(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llEuler2Rot(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_rot(0, 0, 0, 1);
+}
+static SValue bi_llEvade(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llExecCharacterCmd(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llFleeFrom(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llForceMouselook(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llGenerateKey(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llGetAccel(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetAgentInfo(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetAgentLanguage(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llGetAgentList(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetAgentSize(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetAlpha(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llGetAndResetTime(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llGetAnimation(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llGetAnimationList(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetAnimationOverride(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llGetAttachedList(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetAttachedListFiltered(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetBoundingBox(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetCameraPos(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetCameraRot(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_rot(0, 0, 0, 1);
+}
+static SValue bi_llGetCenterOfMass(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetClosestNavPoint(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetColor(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetEnergy(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llGetEnv(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llGetEventTimer(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llGetExperienceDetails(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetExperienceErrorMessage(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llGetForce(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetFreeURLs(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetGMTclock(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llGetGeometricCenter(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetHTTPHeader(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llGetHealth(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llGetInventoryCreator(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llGetInventoryDesc(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llGetInventoryKey(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llGetInventoryName(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llGetInventoryNumber(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetInventoryPermMask(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetInventoryType(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetLinkMedia(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetLinkPrimitiveParams(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetLocalPos(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetLocalRot(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_rot(0, 0, 0, 1);
+}
+static SValue bi_llGetMass(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llGetMassMKS(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llGetMoonDirection(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetMoonRotation(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_rot(0, 0, 0, 1);
+}
+static SValue bi_llGetNextEmail(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llGetNotecardLine(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llGetNotecardLineSync(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llGetNumberOfNotecardLines(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llGetObjectDetails(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetObjectPermMask(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetObjectPrimCount(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetObjectVelocity(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetOmega(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetOwnerKey(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llGetParcelDetails(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetParcelFlags(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetParcelMaxPrims(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetParcelMusicURL(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llGetParcelPrimCount(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetParcelPrimOwners(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetPhysicsMaterial(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetPrimMediaParams(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetPrimitiveParams(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llGetRegionAgentCount(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetRegionCorner(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetRegionFPS(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llGetRegionFlags(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetRegionTimeDilation(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llGetRootPosition(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetRootRotation(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_rot(0, 0, 0, 1);
+}
+static SValue bi_llGetSPMaxMemory(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetScriptState(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetSimStats(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llGetSimulatorHostname(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llGetStartParameter(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetStartString(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llGetStatus(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llGetSunDirection(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetTexture(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llGetTextureOffset(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetTextureRot(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llGetTextureScale(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetTimeOfDay(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llGetTorque(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGetVel(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGiveInventory(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llGiveInventoryList(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llGround(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llGroundNormal(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llGroundSlope(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llKeysKeyValue(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llLinkParticleSystem(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llLinkSitTarget(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llLinksetDataCountFound(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llLinksetDataDeleteKey(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llLinksetDataDeleteProtected(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llLinksetDataFindKeys(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llLinksetDataReadProtected(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llLinksetDataUsed(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llLinksetDataWriteProtected(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llList2ListStrided(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_list_empty();
+}
+static SValue bi_llListFindListNext(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llListStatistics(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llLookAt(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llLoopSound(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llLoopSoundMaster(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llLoopSoundSlave(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llManageEstateAccess(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llMapDestination(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llMax(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llMin(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llModPow(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llMoveToTarget(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llName2Key(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llNavigateTo(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llOffsetTexture(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llOpenRemoteDataChannel(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llParticleSystem(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llPatrolPoints(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llPlaySound(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llPreloadSound(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llPursue(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llPushObject(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llReadKeyValue(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llRefreshPrimURL(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llReleaseControls(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llRemoteDataReply(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llRemoteDataSetRegion(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llRemoteLoadScriptPin(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llRemoveFromLandBanList(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llRemoveFromLandPassList(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llRemoveInventory(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llRemoveVehicleFlags(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llRequestAgentData(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_agent_data_request(s->region, s, as(a, n, 0), "llRequestAgentData");
+    return sv_key(NULL);
+}
+static SValue bi_llRequestAnimationData(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_agent_data_request(s->region, s, as(a, n, 0), "llRequestAnimationData");
+    return sv_key(NULL);
+}
+static SValue bi_llRequestDisplayName(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_agent_data_request(s->region, s, as(a, n, 0), "llRequestDisplayName");
+    return sv_key(NULL);
+}
+static SValue bi_llRequestExperiencePermissions(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_agent_data_request(s->region, s, as(a, n, 0), "llRequestExperiencePermissions");
+    return sv_void();
+}
+static SValue bi_llRequestInventoryData(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_agent_data_request(s->region, s, as(a, n, 0), "llRequestInventoryData");
+    return sv_key(NULL);
+}
+static SValue bi_llRequestSecureURL(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llRequestSimulatorData(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_agent_data_request(s->region, s, as(a, n, 0), "llRequestSimulatorData");
+    return sv_key(NULL);
+}
+static SValue bi_llRequestUserKey(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llRequestUsername(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_agent_data_request(s->region, s, as(a, n, 0), "llRequestUsername");
+    return sv_key(NULL);
+}
+static SValue bi_llResetAnimationOverride(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llResetOtherScript(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llReturnObjectsByID(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llReturnObjectsByOwner(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llRezAtRoot(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_rez(s->region, s, as(a, n, 0));
+    return sv_void();
+}
+static SValue bi_llRezObject(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_rez(s->region, s, as(a, n, 0));
+    return sv_void();
+}
+static SValue bi_llRot2Angle(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llRot2Axis(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llRot2Euler(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llRot2Fwd(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llRot2Left(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llRot2Up(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llRotBetween(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_rot(0, 0, 0, 1);
+}
+static SValue bi_llRotLookAt(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llRotTarget(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llRotTargetRemove(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llRotateTexture(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llScaleTexture(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSendRemoteData(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llSensor(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSensorRemove(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSensorRepeat(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetAlpha(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_prim_set(s->region, s, "llSetAlpha");
+    return sv_void();
+}
+static SValue bi_llSetAngularVelocity(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetAnimationOverride(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetBuoyancy(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetCameraAtOffset(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetCameraEyeOffset(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetCameraParams(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetClickAction(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetCollisionFilter(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetColor(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_prim_set(s->region, s, "llSetColor");
+    return sv_void();
+}
+static SValue bi_llSetDamage(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetEnv(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llSetForce(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetForceAndTorque(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetHoverHeight(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetInventoryPermMask(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetKeyframedMotion(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetLinkAlpha(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_prim_set(s->region, s, "llSetLinkAlpha");
+    return sv_void();
+}
+static SValue bi_llSetLinkCamera(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetLinkColor(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_prim_set(s->region, s, "llSetLinkColor");
+    return sv_void();
+}
+static SValue bi_llSetLinkMedia(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_prim_set(s->region, s, "llSetLinkMedia");
+    return sv_int(0);
+}
+static SValue bi_llSetLinkPhysicsMaterial(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetLinkPrimitiveParams(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_prim_set(s->region, s, "llSetLinkPrimitiveParams");
+    return sv_void();
+}
+static SValue bi_llSetLinkPrimitiveParamsFast(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_prim_set(s->region, s, "llSetLinkPrimitiveParamsFast");
+    return sv_void();
+}
+static SValue bi_llSetLinkRenderMaterial(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_prim_set(s->region, s, "llSetLinkRenderMaterial");
+    return sv_void();
+}
+static SValue bi_llSetLinkTexture(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_prim_set(s->region, s, "llSetLinkTexture");
+    return sv_void();
+}
+static SValue bi_llSetLinkTextureAnim(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_prim_set(s->region, s, "llSetLinkTextureAnim");
+    return sv_void();
+}
+static SValue bi_llSetLocalRot(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetObjectPermMask(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetParcelDetails(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llSetParcelMusicURL(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetPhysicsMaterial(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetPrimMediaParams(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_prim_set(s->region, s, "llSetPrimMediaParams");
+    return sv_void();
+}
+static SValue bi_llSetPrimURL(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetPrimitiveParams(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_prim_set(s->region, s, "llSetPrimitiveParams");
+    return sv_void();
+}
+static SValue bi_llSetRegionPos(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llSetRemoteScriptAccessPin(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetScriptState(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetSitText(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetSoundQueueing(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetSoundRadius(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetStatus(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetTexture(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_prim_set(s->region, s, "llSetTexture");
+    return sv_void();
+}
+static SValue bi_llSetTextureAnim(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    evt_prim_set(s->region, s, "llSetTextureAnim");
+    return sv_void();
+}
+static SValue bi_llSetTorque(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetTouchText(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetVehicleFlags(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetVehicleFloatParam(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetVehicleRotationParam(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetVehicleType(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetVehicleVectorParam(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSetVelocity(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSitOnLink(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llSitTarget(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSoundPreload(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llStartAnimation(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llStartObjectAnimation(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llStopAnimation(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llStopHover(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llStopLookAt(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llStopMoveToTarget(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llStopObjectAnimation(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llStopSound(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llSunDirection(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llTakeControls(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llTarget(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_int(0);
+}
+static SValue bi_llTargetOmega(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llTargetRemove(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llTeleportAgent(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llTeleportAgentGlobalCoords(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llTeleportAgentHome(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llTriggerSound(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llTriggerSoundLimited(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llUnSit(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llUpdateKeyValue(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_key(NULL);
+}
+static SValue bi_llVolumeDetect(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llWanderWithin(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_void();
+}
+static SValue bi_llWater(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_float(0.0);
+}
+static SValue bi_llWind(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_vec(0, 0, 0);
+}
+static SValue bi_llXorBase64(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llXorBase64Strings(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
+static SValue bi_llXorBase64StringsCorrect(Script *s, SValue *a, int n) {
+    (void)s; (void)a; (void)n;
+    return sv_string("");
+}
 /* Registration table                                              */
 /* ============================================================== */
 
@@ -1842,6 +3054,303 @@ static const BuiltinEntry TABLE[] = {
     {"llKey2Name", bi_llKey2Name}, {"llGetUsername", bi_llGetUsername},
     {"llGetDisplayName", bi_llGetDisplayName},
     {"llGetAttached", bi_llGetAttached},
+    /* --- wiki-sync stubs --- */
+    {"llAddToLandBanList", bi_llAddToLandBanList},
+    {"llAddToLandPassList", bi_llAddToLandPassList},
+    {"llAgentInExperience", bi_llAgentInExperience},
+    {"llAngleBetween", bi_llAngleBetween},
+    {"llApplyImpulse", bi_llApplyImpulse},
+    {"llApplyRotationalImpulse", bi_llApplyRotationalImpulse},
+    {"llAttachToAvatar", bi_llAttachToAvatar},
+    {"llAttachToAvatarTemp", bi_llAttachToAvatarTemp},
+    {"llAvatarOnLinkSitTarget", bi_llAvatarOnLinkSitTarget},
+    {"llAvatarOnSitTarget", bi_llAvatarOnSitTarget},
+    {"llAxes2Rot", bi_llAxes2Rot},
+    {"llAxisAngle2Rot", bi_llAxisAngle2Rot},
+    {"llBreakAllLinks", bi_llBreakAllLinks},
+    {"llBreakLink", bi_llBreakLink},
+    {"llCastRay", bi_llCastRay},
+    {"llCharacterUpdate", bi_llCharacterUpdate},
+    {"llClearCameraParams", bi_llClearCameraParams},
+    {"llClearLinkMedia", bi_llClearLinkMedia},
+    {"llClearPrimMedia", bi_llClearPrimMedia},
+    {"llCloseRemoteDataChannel", bi_llCloseRemoteDataChannel},
+    {"llCloud", bi_llCloud},
+    {"llCollisionFilter", bi_llCollisionFilter},
+    {"llCollisionSound", bi_llCollisionSound},
+    {"llCollisionSprite", bi_llCollisionSprite},
+    {"llComputeHash", bi_llComputeHash},
+    {"llCreateCharacter", bi_llCreateCharacter},
+    {"llCreateKeyValue", bi_llCreateKeyValue},
+    {"llCreateLink", bi_llCreateLink},
+    {"llDamageEvent", bi_llDamageEvent},
+    {"llDataSizeKeyValue", bi_llDataSizeKeyValue},
+    {"llDeleteCharacter", bi_llDeleteCharacter},
+    {"llDeleteKeyValue", bi_llDeleteKeyValue},
+    {"llDetachFromAvatar", bi_llDetachFromAvatar},
+    {"llDetectedGrab", bi_llDetectedGrab},
+    {"llDetectedGroup", bi_llDetectedGroup},
+    {"llDetectedRot", bi_llDetectedRot},
+    {"llDetectedTouchBinormal", bi_llDetectedTouchBinormal},
+    {"llDetectedTouchFace", bi_llDetectedTouchFace},
+    {"llDetectedTouchNormal", bi_llDetectedTouchNormal},
+    {"llDetectedTouchPos", bi_llDetectedTouchPos},
+    {"llDetectedTouchST", bi_llDetectedTouchST},
+    {"llDetectedTouchUV", bi_llDetectedTouchUV},
+    {"llDetectedVel", bi_llDetectedVel},
+    {"llEmail", bi_llEmail},
+    {"llEuler2Rot", bi_llEuler2Rot},
+    {"llEvade", bi_llEvade},
+    {"llExecCharacterCmd", bi_llExecCharacterCmd},
+    {"llFleeFrom", bi_llFleeFrom},
+    {"llForceMouselook", bi_llForceMouselook},
+    {"llGenerateKey", bi_llGenerateKey},
+    {"llGetAccel", bi_llGetAccel},
+    {"llGetAgentInfo", bi_llGetAgentInfo},
+    {"llGetAgentLanguage", bi_llGetAgentLanguage},
+    {"llGetAgentList", bi_llGetAgentList},
+    {"llGetAgentSize", bi_llGetAgentSize},
+    {"llGetAlpha", bi_llGetAlpha},
+    {"llGetAndResetTime", bi_llGetAndResetTime},
+    {"llGetAnimation", bi_llGetAnimation},
+    {"llGetAnimationList", bi_llGetAnimationList},
+    {"llGetAnimationOverride", bi_llGetAnimationOverride},
+    {"llGetAttachedList", bi_llGetAttachedList},
+    {"llGetAttachedListFiltered", bi_llGetAttachedListFiltered},
+    {"llGetBoundingBox", bi_llGetBoundingBox},
+    {"llGetCameraPos", bi_llGetCameraPos},
+    {"llGetCameraRot", bi_llGetCameraRot},
+    {"llGetCenterOfMass", bi_llGetCenterOfMass},
+    {"llGetClosestNavPoint", bi_llGetClosestNavPoint},
+    {"llGetColor", bi_llGetColor},
+    {"llGetEnergy", bi_llGetEnergy},
+    {"llGetEnv", bi_llGetEnv},
+    {"llGetEventTimer", bi_llGetEventTimer},
+    {"llGetExperienceDetails", bi_llGetExperienceDetails},
+    {"llGetExperienceErrorMessage", bi_llGetExperienceErrorMessage},
+    {"llGetForce", bi_llGetForce},
+    {"llGetFreeURLs", bi_llGetFreeURLs},
+    {"llGetGMTclock", bi_llGetGMTclock},
+    {"llGetGeometricCenter", bi_llGetGeometricCenter},
+    {"llGetHTTPHeader", bi_llGetHTTPHeader},
+    {"llGetHealth", bi_llGetHealth},
+    {"llGetInventoryCreator", bi_llGetInventoryCreator},
+    {"llGetInventoryDesc", bi_llGetInventoryDesc},
+    {"llGetInventoryKey", bi_llGetInventoryKey},
+    {"llGetInventoryName", bi_llGetInventoryName},
+    {"llGetInventoryNumber", bi_llGetInventoryNumber},
+    {"llGetInventoryPermMask", bi_llGetInventoryPermMask},
+    {"llGetInventoryType", bi_llGetInventoryType},
+    {"llGetLinkMedia", bi_llGetLinkMedia},
+    {"llGetLinkPrimitiveParams", bi_llGetLinkPrimitiveParams},
+    {"llGetLocalPos", bi_llGetLocalPos},
+    {"llGetLocalRot", bi_llGetLocalRot},
+    {"llGetMass", bi_llGetMass},
+    {"llGetMassMKS", bi_llGetMassMKS},
+    {"llGetMoonDirection", bi_llGetMoonDirection},
+    {"llGetMoonRotation", bi_llGetMoonRotation},
+    {"llGetNextEmail", bi_llGetNextEmail},
+    {"llGetNotecardLine", bi_llGetNotecardLine},
+    {"llGetNotecardLineSync", bi_llGetNotecardLineSync},
+    {"llGetNumberOfNotecardLines", bi_llGetNumberOfNotecardLines},
+    {"llGetObjectDetails", bi_llGetObjectDetails},
+    {"llGetObjectPermMask", bi_llGetObjectPermMask},
+    {"llGetObjectPrimCount", bi_llGetObjectPrimCount},
+    {"llGetObjectVelocity", bi_llGetObjectVelocity},
+    {"llGetOmega", bi_llGetOmega},
+    {"llGetOwnerKey", bi_llGetOwnerKey},
+    {"llGetParcelDetails", bi_llGetParcelDetails},
+    {"llGetParcelFlags", bi_llGetParcelFlags},
+    {"llGetParcelMaxPrims", bi_llGetParcelMaxPrims},
+    {"llGetParcelMusicURL", bi_llGetParcelMusicURL},
+    {"llGetParcelPrimCount", bi_llGetParcelPrimCount},
+    {"llGetParcelPrimOwners", bi_llGetParcelPrimOwners},
+    {"llGetPhysicsMaterial", bi_llGetPhysicsMaterial},
+    {"llGetPrimMediaParams", bi_llGetPrimMediaParams},
+    {"llGetPrimitiveParams", bi_llGetPrimitiveParams},
+    {"llGetRegionAgentCount", bi_llGetRegionAgentCount},
+    {"llGetRegionCorner", bi_llGetRegionCorner},
+    {"llGetRegionFPS", bi_llGetRegionFPS},
+    {"llGetRegionFlags", bi_llGetRegionFlags},
+    {"llGetRegionTimeDilation", bi_llGetRegionTimeDilation},
+    {"llGetRootPosition", bi_llGetRootPosition},
+    {"llGetRootRotation", bi_llGetRootRotation},
+    {"llGetSPMaxMemory", bi_llGetSPMaxMemory},
+    {"llGetScriptState", bi_llGetScriptState},
+    {"llGetSimStats", bi_llGetSimStats},
+    {"llGetSimulatorHostname", bi_llGetSimulatorHostname},
+    {"llGetStartParameter", bi_llGetStartParameter},
+    {"llGetStartString", bi_llGetStartString},
+    {"llGetStatus", bi_llGetStatus},
+    {"llGetSunDirection", bi_llGetSunDirection},
+    {"llGetTexture", bi_llGetTexture},
+    {"llGetTextureOffset", bi_llGetTextureOffset},
+    {"llGetTextureRot", bi_llGetTextureRot},
+    {"llGetTextureScale", bi_llGetTextureScale},
+    {"llGetTimeOfDay", bi_llGetTimeOfDay},
+    {"llGetTorque", bi_llGetTorque},
+    {"llGetVel", bi_llGetVel},
+    {"llGiveInventory", bi_llGiveInventory},
+    {"llGiveInventoryList", bi_llGiveInventoryList},
+    {"llGround", bi_llGround},
+    {"llGroundNormal", bi_llGroundNormal},
+    {"llGroundSlope", bi_llGroundSlope},
+    {"llKeysKeyValue", bi_llKeysKeyValue},
+    {"llLinkParticleSystem", bi_llLinkParticleSystem},
+    {"llLinkSitTarget", bi_llLinkSitTarget},
+    {"llLinksetDataCountFound", bi_llLinksetDataCountFound},
+    {"llLinksetDataDeleteKey", bi_llLinksetDataDeleteKey},
+    {"llLinksetDataDeleteProtected", bi_llLinksetDataDeleteProtected},
+    {"llLinksetDataFindKeys", bi_llLinksetDataFindKeys},
+    {"llLinksetDataReadProtected", bi_llLinksetDataReadProtected},
+    {"llLinksetDataUsed", bi_llLinksetDataUsed},
+    {"llLinksetDataWriteProtected", bi_llLinksetDataWriteProtected},
+    {"llList2ListStrided", bi_llList2ListStrided},
+    {"llListFindListNext", bi_llListFindListNext},
+    {"llListStatistics", bi_llListStatistics},
+    {"llLookAt", bi_llLookAt},
+    {"llLoopSound", bi_llLoopSound},
+    {"llLoopSoundMaster", bi_llLoopSoundMaster},
+    {"llLoopSoundSlave", bi_llLoopSoundSlave},
+    {"llManageEstateAccess", bi_llManageEstateAccess},
+    {"llMapDestination", bi_llMapDestination},
+    {"llMax", bi_llMax},
+    {"llMin", bi_llMin},
+    {"llModPow", bi_llModPow},
+    {"llMoveToTarget", bi_llMoveToTarget},
+    {"llName2Key", bi_llName2Key},
+    {"llNavigateTo", bi_llNavigateTo},
+    {"llOffsetTexture", bi_llOffsetTexture},
+    {"llOpenRemoteDataChannel", bi_llOpenRemoteDataChannel},
+    {"llParticleSystem", bi_llParticleSystem},
+    {"llPatrolPoints", bi_llPatrolPoints},
+    {"llPlaySound", bi_llPlaySound},
+    {"llPreloadSound", bi_llPreloadSound},
+    {"llPursue", bi_llPursue},
+    {"llPushObject", bi_llPushObject},
+    {"llReadKeyValue", bi_llReadKeyValue},
+    {"llRefreshPrimURL", bi_llRefreshPrimURL},
+    {"llReleaseControls", bi_llReleaseControls},
+    {"llRemoteDataReply", bi_llRemoteDataReply},
+    {"llRemoteDataSetRegion", bi_llRemoteDataSetRegion},
+    {"llRemoteLoadScriptPin", bi_llRemoteLoadScriptPin},
+    {"llRemoveFromLandBanList", bi_llRemoveFromLandBanList},
+    {"llRemoveFromLandPassList", bi_llRemoveFromLandPassList},
+    {"llRemoveInventory", bi_llRemoveInventory},
+    {"llRemoveVehicleFlags", bi_llRemoveVehicleFlags},
+    {"llRequestAgentData", bi_llRequestAgentData},
+    {"llRequestAnimationData", bi_llRequestAnimationData},
+    {"llRequestDisplayName", bi_llRequestDisplayName},
+    {"llRequestExperiencePermissions", bi_llRequestExperiencePermissions},
+    {"llRequestInventoryData", bi_llRequestInventoryData},
+    {"llRequestSecureURL", bi_llRequestSecureURL},
+    {"llRequestSimulatorData", bi_llRequestSimulatorData},
+    {"llRequestUserKey", bi_llRequestUserKey},
+    {"llRequestUsername", bi_llRequestUsername},
+    {"llResetAnimationOverride", bi_llResetAnimationOverride},
+    {"llResetOtherScript", bi_llResetOtherScript},
+    {"llReturnObjectsByID", bi_llReturnObjectsByID},
+    {"llReturnObjectsByOwner", bi_llReturnObjectsByOwner},
+    {"llRezAtRoot", bi_llRezAtRoot},
+    {"llRezObject", bi_llRezObject},
+    {"llRot2Angle", bi_llRot2Angle},
+    {"llRot2Axis", bi_llRot2Axis},
+    {"llRot2Euler", bi_llRot2Euler},
+    {"llRot2Fwd", bi_llRot2Fwd},
+    {"llRot2Left", bi_llRot2Left},
+    {"llRot2Up", bi_llRot2Up},
+    {"llRotBetween", bi_llRotBetween},
+    {"llRotLookAt", bi_llRotLookAt},
+    {"llRotTarget", bi_llRotTarget},
+    {"llRotTargetRemove", bi_llRotTargetRemove},
+    {"llRotateTexture", bi_llRotateTexture},
+    {"llScaleTexture", bi_llScaleTexture},
+    {"llSendRemoteData", bi_llSendRemoteData},
+    {"llSensor", bi_llSensor},
+    {"llSensorRemove", bi_llSensorRemove},
+    {"llSensorRepeat", bi_llSensorRepeat},
+    {"llSetAlpha", bi_llSetAlpha},
+    {"llSetAngularVelocity", bi_llSetAngularVelocity},
+    {"llSetAnimationOverride", bi_llSetAnimationOverride},
+    {"llSetBuoyancy", bi_llSetBuoyancy},
+    {"llSetCameraAtOffset", bi_llSetCameraAtOffset},
+    {"llSetCameraEyeOffset", bi_llSetCameraEyeOffset},
+    {"llSetCameraParams", bi_llSetCameraParams},
+    {"llSetClickAction", bi_llSetClickAction},
+    {"llSetCollisionFilter", bi_llSetCollisionFilter},
+    {"llSetColor", bi_llSetColor},
+    {"llSetDamage", bi_llSetDamage},
+    {"llSetEnv", bi_llSetEnv},
+    {"llSetForce", bi_llSetForce},
+    {"llSetForceAndTorque", bi_llSetForceAndTorque},
+    {"llSetHoverHeight", bi_llSetHoverHeight},
+    {"llSetInventoryPermMask", bi_llSetInventoryPermMask},
+    {"llSetKeyframedMotion", bi_llSetKeyframedMotion},
+    {"llSetLinkAlpha", bi_llSetLinkAlpha},
+    {"llSetLinkCamera", bi_llSetLinkCamera},
+    {"llSetLinkColor", bi_llSetLinkColor},
+    {"llSetLinkMedia", bi_llSetLinkMedia},
+    {"llSetLinkPhysicsMaterial", bi_llSetLinkPhysicsMaterial},
+    {"llSetLinkPrimitiveParams", bi_llSetLinkPrimitiveParams},
+    {"llSetLinkPrimitiveParamsFast", bi_llSetLinkPrimitiveParamsFast},
+    {"llSetLinkRenderMaterial", bi_llSetLinkRenderMaterial},
+    {"llSetLinkTexture", bi_llSetLinkTexture},
+    {"llSetLinkTextureAnim", bi_llSetLinkTextureAnim},
+    {"llSetLocalRot", bi_llSetLocalRot},
+    {"llSetObjectPermMask", bi_llSetObjectPermMask},
+    {"llSetParcelDetails", bi_llSetParcelDetails},
+    {"llSetParcelMusicURL", bi_llSetParcelMusicURL},
+    {"llSetPhysicsMaterial", bi_llSetPhysicsMaterial},
+    {"llSetPrimMediaParams", bi_llSetPrimMediaParams},
+    {"llSetPrimURL", bi_llSetPrimURL},
+    {"llSetPrimitiveParams", bi_llSetPrimitiveParams},
+    {"llSetRegionPos", bi_llSetRegionPos},
+    {"llSetRemoteScriptAccessPin", bi_llSetRemoteScriptAccessPin},
+    {"llSetScriptState", bi_llSetScriptState},
+    {"llSetSitText", bi_llSetSitText},
+    {"llSetSoundQueueing", bi_llSetSoundQueueing},
+    {"llSetSoundRadius", bi_llSetSoundRadius},
+    {"llSetStatus", bi_llSetStatus},
+    {"llSetTexture", bi_llSetTexture},
+    {"llSetTextureAnim", bi_llSetTextureAnim},
+    {"llSetTorque", bi_llSetTorque},
+    {"llSetTouchText", bi_llSetTouchText},
+    {"llSetVehicleFlags", bi_llSetVehicleFlags},
+    {"llSetVehicleFloatParam", bi_llSetVehicleFloatParam},
+    {"llSetVehicleRotationParam", bi_llSetVehicleRotationParam},
+    {"llSetVehicleType", bi_llSetVehicleType},
+    {"llSetVehicleVectorParam", bi_llSetVehicleVectorParam},
+    {"llSetVelocity", bi_llSetVelocity},
+    {"llSitOnLink", bi_llSitOnLink},
+    {"llSitTarget", bi_llSitTarget},
+    {"llSoundPreload", bi_llSoundPreload},
+    {"llStartAnimation", bi_llStartAnimation},
+    {"llStartObjectAnimation", bi_llStartObjectAnimation},
+    {"llStopAnimation", bi_llStopAnimation},
+    {"llStopHover", bi_llStopHover},
+    {"llStopLookAt", bi_llStopLookAt},
+    {"llStopMoveToTarget", bi_llStopMoveToTarget},
+    {"llStopObjectAnimation", bi_llStopObjectAnimation},
+    {"llStopSound", bi_llStopSound},
+    {"llSunDirection", bi_llSunDirection},
+    {"llTakeControls", bi_llTakeControls},
+    {"llTarget", bi_llTarget},
+    {"llTargetOmega", bi_llTargetOmega},
+    {"llTargetRemove", bi_llTargetRemove},
+    {"llTeleportAgent", bi_llTeleportAgent},
+    {"llTeleportAgentGlobalCoords", bi_llTeleportAgentGlobalCoords},
+    {"llTeleportAgentHome", bi_llTeleportAgentHome},
+    {"llTriggerSound", bi_llTriggerSound},
+    {"llTriggerSoundLimited", bi_llTriggerSoundLimited},
+    {"llUnSit", bi_llUnSit},
+    {"llUpdateKeyValue", bi_llUpdateKeyValue},
+    {"llVolumeDetect", bi_llVolumeDetect},
+    {"llWanderWithin", bi_llWanderWithin},
+    {"llWater", bi_llWater},
+    {"llWind", bi_llWind},
+    {"llXorBase64", bi_llXorBase64},
+    {"llXorBase64Strings", bi_llXorBase64Strings},
+    {"llXorBase64StringsCorrect", bi_llXorBase64StringsCorrect},
     {NULL, NULL}
 };
 

@@ -341,6 +341,47 @@ void evt_lsd_set(Region *r, Script *s, const char *key, const char *value) {
     }
 }
 
+void evt_prim_set(Region *r, Script *s, const char *fn_name) {
+    FILE *f = out_stream(r);
+    if (r->json_events) {
+        j_open(r, "prim-set");
+        j_kv_str(f, "src", src_name(s));
+        j_kv_str(f, "fn", fn_name ? fn_name : "");
+        j_close(r);
+    } else {
+        fprintf(f, "[prim  %s] %s\n", src_name(s), fn_name ? fn_name : "");
+        fflush(f);
+    }
+}
+
+void evt_agent_data_request(Region *r, Script *s, const char *who, const char *kind) {
+    FILE *f = out_stream(r);
+    if (r->json_events) {
+        j_open(r, "agent-data-request");
+        j_kv_str(f, "src", src_name(s));
+        j_kv_str(f, "who", who ? who : "");
+        j_kv_str(f, "kind", kind ? kind : "");
+        j_close(r);
+    } else {
+        fprintf(f, "[agent %s] %s for %s\n", src_name(s),
+                kind ? kind : "?", who ? who : "?");
+        fflush(f);
+    }
+}
+
+void evt_rez(Region *r, Script *s, const char *inventory) {
+    FILE *f = out_stream(r);
+    if (r->json_events) {
+        j_open(r, "rez");
+        j_kv_str(f, "src", src_name(s));
+        j_kv_str(f, "inventory", inventory ? inventory : "");
+        j_close(r);
+    } else {
+        fprintf(f, "[rez   %s] %s\n", src_name(s), inventory ? inventory : "");
+        fflush(f);
+    }
+}
+
 void evt_assertion(Region *r, const char *what, int passed, const char *detail) {
     FILE *f = out_stream(r);
     if (r->json_events) {

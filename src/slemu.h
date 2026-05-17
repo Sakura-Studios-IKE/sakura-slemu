@@ -429,6 +429,12 @@ void evt_reset(Region *r, Script *s);
 void evt_info(Region *r, const char *fmt, ...);    /* generic info line */
 void evt_assertion(Region *r, const char *what, int passed, const char *detail);
 void evt_lsd_set(Region *r, Script *s, const char *key, const char *value);
+/* Side-effect emitters introduced by the wiki-sync stubs. Each one is line-
+ * delimited under --json-events so curriculum tests can assert via lsltest's
+ * event aliases (`prim-set`, `agent-data-request`, `rez`). */
+void evt_prim_set(Region *r, Script *s, const char *fn_name);
+void evt_agent_data_request(Region *r, Script *s, const char *who, const char *kind);
+void evt_rez(Region *r, Script *s, const char *inventory);
 
 /* ------------------ Open dialogs ------------------ */
 void dialog_open(Region *r, Script *s, const char *to, const char *msg,
